@@ -8,7 +8,7 @@ ENV PYTHON3_VERSION=3.5
 ENV PYTHON2_VERSION=2.7
 ENV PATH /opt/conda/bin:$PATH
 ARG CAFFE_VERSION=master
-ARG THEANO_VERSION=latest
+ARG THEANO_VERSION=master
 # ==================================================================
 # module list
 # ------------------------------------------------------------------
