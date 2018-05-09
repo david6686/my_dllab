@@ -115,6 +115,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		python-pandas \
 		python-sklearn \
         python-sympy \
+		#pytorch
+		pip install http://download.pytorch.org/whl/cu90/torch-0.4.0-cp35-cp35m-linux_x86_64.whl  \
+		pip install torchvision \
         && \
         apt-get clean && \
         apt-get autoremove && \ 
