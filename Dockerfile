@@ -140,11 +140,13 @@ RUN pip --no-cache-dir install --upgrade ipython && \
 		sphinx \
 		wheel \
 		zmq \
-		#pytorch
-		http://download.pytorch.org/whl/cu90/torch-0.4.0-cp35-cp35m-linux_x86_64.whl  \
-		torchvision \
 		&& \
         python -m ipykernel.kernelspec
+# ==================================================================
+# pytorch
+# ------------------------------------------------------------------
+RUN pip --no-cache-dir install http://download.pytorch.org/whl/cu90/torch-0.4.0-cp35-cp35m-linux_x86_64.whl 
+RUN pip --no-cache-dir install torchvision
 # RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-4.4.10-Linux-x86_64.sh -O ~/miniconda.sh && \
 #     /bin/bash ~/miniconda.sh -b -p /opt/conda && \
 #     rm ~/miniconda.sh && \
