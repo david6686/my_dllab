@@ -24,41 +24,41 @@ ARG THEANO_VERSION=master
 # ==================================================================
 
 RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        build-essential \
-        g++ \
-        cmake \
-        git \
-        curl \
-        vim \
-        wget \
-        unzip \
-        ca-certificates \
-        libcudnn7=$CUDNN_VERSION \
-        libnccl2=$NCCL_VERSION \
-        libnccl-dev=$NCCL_VERSION \
-#         libgtk2.0 \
-#         libjpeg-dev \
-#         libpng-dev \
-#         libffi-dev \
-# 		libfreetype6-dev \
-# 		libhdf5-dev \
-# 		libjpeg-dev \
-# 		liblcms2-dev \
-# 		libopenblas-dev \
-# 		liblapack-dev \
-# 		libpng12-dev \
-# 		libssl-dev \
-# 		libtiff5-dev \
-# 		libwebp-dev \
-#         libzmq3-dev \
-        software-properties-common \
-        python$PYTHON3_VERSION \
-        python$PYTHON3_VERSION-dev \
-        python$PYTHON3_VERSION-tk \
-        python$PYTHON2_VERSION \
-        python$PYTHON2_VERSION-dev \
-        python$PYTHON2_VERSION-tk \
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#         build-essential \
+#         g++ \
+#         cmake \
+#         git \
+#         curl \
+#         vim \
+#         wget \
+#         unzip \
+#         ca-certificates \
+#         libcudnn7=$CUDNN_VERSION \
+#         libnccl2=$NCCL_VERSION \
+#         libnccl-dev=$NCCL_VERSION \
+#          libgtk2.0 \
+#          libjpeg-dev \
+#          libpng-dev \
+#          libffi-dev \
+#  		libfreetype6-dev \
+#  		libhdf5-dev \
+#  		libjpeg-dev \
+#  		liblcms2-dev \
+#  		libopenblas-dev \
+#  		liblapack-dev \
+#  		libpng12-dev \
+#  		libssl-dev \
+#  		libtiff5-dev \
+#  		libwebp-dev \
+#          libzmq3-dev \
+#         software-properties-common \
+#         python$PYTHON3_VERSION \
+#         python$PYTHON3_VERSION-dev \
+#         python$PYTHON3_VERSION-tk \
+#         python$PYTHON2_VERSION \
+#         python$PYTHON2_VERSION-dev \
+#         python$PYTHON2_VERSION-tk \
 #         zlib1g-dev \
 # 		qt5-default \
 # 		libvtk6-dev \
@@ -93,32 +93,56 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # 		libhdf5-serial-dev \
 # 		libleveldb-dev \
 # 		liblmdb-dev \
-        libopencv-dev \
-		yasm \
-		libopencore-amrnb-dev \
-		libopencore-amrwb-dev \
-		libv4l-dev \
-		libxine2-dev \
-		libtbb-dev \
-        libeigen3-dev \
-        emacs \
-        ant \
-        doxygen \
-        python-setuptools \
-        fish \
-        python-numpy \
-		python-scipy \
-		python-nose \
-		python-h5py \
-		python-skimage \
-		python-matplotlib \
-		python-pandas \
-		python-sklearn \
-        python-sympy \
+#         libopencv-dev \
+# 		yasm \
+# 		libopencore-amrnb-dev \
+# 		libopencore-amrwb-dev \
+# 		libv4l-dev \
+# 		libxine2-dev \
+# 		libtbb-dev \
+#         libeigen3-dev \
+#         emacs \
+#         ant \
+#         doxygen \
+#         python-setuptools \
+#         fish \
+#         python-numpy \
+# 		python-scipy \
+# 		python-nose \
+# 		python-h5py \
+# 		python-skimage \
+# 		python-matplotlib \
+# 		python-pandas \
+# 		python-sklearn \
+#         python-sympy \
 		
-        && \
-        apt-get clean && \
-        apt-get autoremove && \ 
+#         && \
+#         apt-get clean && \
+#         apt-get autoremove && \ 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	curl \ 
+	build-essential \
+	git \ 
+	libcudnn7=$CUDNN_VERSION \
+        libnccl2=$NCCL_VERSION \
+        libnccl-dev=$NCCL_VERSION \
+	python$PYTHON3_VERSION \
+        python$PYTHON3_VERSION-dev \
+        python$PYTHON3_VERSION-tk \
+        python$PYTHON2_VERSION \
+        python$PYTHON2_VERSION-dev \
+        python$PYTHON2_VERSION-tk \
+	python-numpy \
+	python-scipy \
+	python-nose \
+	python-h5py \
+	python-skimage \
+	python-matplotlib \
+	python-pandas \
+	python-sklearn \
+        python-sympy \
+	fish \ &&
+	
         # Link BLAS library to use OpenBLAS using the alternatives mechanism (https://www.scipy.org/scipylib/building/linux.html#debian-ubuntu)
         update-alternatives --set libblas.so.3 /usr/lib/openblas-base/libblas.so.3  
 RUN git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d &&\
@@ -145,8 +169,8 @@ RUN pip --no-cache-dir install --upgrade ipython && \
 # ==================================================================
 # pytorch
 # ------------------------------------------------------------------
-RUN pip3 install http://download.pytorch.org/whl/cu90/torch-0.4.0-cp35-cp35m-linux_x86_64.whl  
-RUN pip3 --no-cache-dir install torchvision
+RUN pip --no-cache-dir install http://download.pytorch.org/whl/cu90/torch-0.4.0-cp35-cp35m-linux_x86_64.whl  
+RUN pip --no-cache-dir install torchvision
 # RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-4.4.10-Linux-x86_64.sh -O ~/miniconda.sh && \
 #     /bin/bash ~/miniconda.sh -b -p /opt/conda && \
 #     rm ~/miniconda.sh && \
