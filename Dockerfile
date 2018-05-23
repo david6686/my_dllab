@@ -28,16 +28,19 @@ RUN apt-get update && apt-get install -y  --allow-downgrades --no-install-recomm
         python$PYTHON_VERSION3-dev \
 		python$PYTHON_VERSION2 \
         python$PYTHON_VERSION2-dev \
-		libgtk2.0-dev
+		libgtk2.0-dev \
+		python-pip \
+		python3-pip
 
-# RUN ln -s /usr/bin/python$PYTHON_VERSION /usr/bin/python
 
-RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
-    python get-pip.py && \
-    rm get-pip.py
+RUN ln -s /usr/bin/python$PYTHON_VERSION3 /usr/bin/python3
+
+# RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
+#     python get-pip.py && \
+#     rm get-pip.py
 
 # Install TensorFlow and Keras
-RUN pip install --no-cache-dir tensorflow-gpu==$TENSORFLOW_VERSION keras h5py
+RUN pip3 install --no-cache-dir tensorflow-gpu==$TENSORFLOW_VERSION keras h5py opencv-python
 
 # Install Open MPI
 RUN mkdir /tmp/openmpi && \
