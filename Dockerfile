@@ -1,9 +1,7 @@
-FROM nvidia/cuda:9.0-devel-ubuntu16.04
+FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
 
 # TensorFlow version is tightly coupled to CUDA and cuDNN so it should be selected carefully
 ENV TENSORFLOW_VERSION=1.6.0
-ENV CUDNN_VERSION=7.0.5.15-1+cuda9.0
-ENV NCCL_VERSION=2.1.15-1+cuda9.0
 
 # Python 2.7 or 3.5 is supported by Ubuntu Xenial out of the box
 ENV PYTHON_VERSION3=3.5
@@ -17,7 +15,7 @@ RUN apt-get update && apt-get install -y  --allow-downgrades --no-install-recomm
         curl \
         vim \
         wget \
-		fish \
+	fish \
         ca-certificates \
         libcudnn7=$CUDNN_VERSION \
         libnccl2=$NCCL_VERSION \
@@ -26,11 +24,11 @@ RUN apt-get update && apt-get install -y  --allow-downgrades --no-install-recomm
         libpng-dev \
         python$PYTHON_VERSION3 \
         python$PYTHON_VERSION3-dev \
-		python$PYTHON_VERSION2 \
+	python$PYTHON_VERSION2 \
         python$PYTHON_VERSION2-dev \
-		libgtk2.0-dev \
-		python-pip \
-		python3-pip
+	libgtk2.0-dev \
+	python-pip \
+	python3-pip
 
 
 # RUN ln -s /usr/bin/python3.5 /usr/bin/python3
@@ -71,9 +69,9 @@ RUN echo "hwloc_base_binding_policy = none" >> /usr/local/etc/openmpi-mca-params
     echo "rmaps_base_mapping_policy = slot" >> /usr/local/etc/openmpi-mca-params.conf && \
     echo "btl_tcp_if_exclude = lo,docker0" >> /usr/local/etc/openmpi-mca-params.conf
 
-# Set default NCCL parameters
-RUN echo NCCL_DEBUG=INFO >> /etc/nccl.conf && \
-    echo NCCL_SOCKET_IFNAME=^docker0 >> /etc/nccl.conf
+# # Set default NCCL parameters
+# RUN echo NCCL_DEBUG=INFO >> /etc/nccl.conf && \
+#     echo NCCL_SOCKET_IFNAME=^docker0 >> /etc/nccl.conf
 
 # Install OpenSSH for MPI to communicate between containers
 RUN apt-get install -y --no-install-recommends openssh-client openssh-server && \
@@ -84,8 +82,8 @@ RUN cat /etc/ssh/ssh_config | grep -v StrictHostKeyChecking > /etc/ssh/ssh_confi
     echo "    StrictHostKeyChecking no" >> /etc/ssh/ssh_config.new && \
     mv /etc/ssh/ssh_config.new /etc/ssh/ssh_config
 
-# Download examples
-RUN apt-get install -y --no-install-recommends subversion && \
-    svn checkout https://github.com/uber/horovod/trunk/examples && \
-    rm -rf /examples/.svn
+# # Download examples
+# RUN apt-get install -y --no-install-recommends subversion && \
+#     svn checkout https://github.com/uber/horovod/trunk/examples && \
+#     rm -rf /examples/.svn
 
