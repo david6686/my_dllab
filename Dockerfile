@@ -1,10 +1,13 @@
-FROM nvidia/cuda:9.0-devel-ubuntu16.04 # TensorFlow version is tightly coupled to CUDA and cuDNN so it should be selected carefully 
+FROM nvidia/cuda:9.0-devel-ubuntu16.04 
+# TensorFlow version is tightly coupled to CUDA and cuDNN so it should be selected carefully 
 ENV TENSORFLOW_VERSION=1.6.0 
 ENV CUDNN_VERSION=7.0.5.15-1+cuda9.0 
 ENV NCCL_VERSION=2.1.15-1+cuda9.0 
 # Python 2.7 or 3.5 is supported by Ubuntu Xenial out of the box 
-ENV PYTHON_VERSION=3.5 
+ENV PYTHON_VERSION3=3.5 
+ENV PYTHON_VERSION2=2.7
 RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
         cmake \
@@ -18,14 +21,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libnccl-dev=$NCCL_VERSION \
         libjpeg-dev \
         libpng-dev \
-        python$PYTHON_VERSION \
-        python$PYTHON_VERSION-dev
+        python$PYTHON_VERSION3 \
+        python$PYTHON_VERSION3-dev \
+		python$PYTHON_VERSION2 \
+        python$PYTHON_VERSION2-dev \
+		libgtk2.0-dev
 # RUN ln -s /usr/bin/python$PYTHON_VERSION /usr/bin/python
 RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
     python get-pip.py && \
     rm get-pip.py
 # Install TensorFlow and Keras 
-RUN pip install --no-cache-dir tensorflow-gpu==$TENSORFLOW_VERSION keras h5py
+RUN pip3 install --no-cache-dir tensorflow-gpu==$TENSORFLOW_VERSION keras h5py opencv-python
 # Install Open MPI 
 RUN mkdir /tmp/openmpi && \
     cd /tmp/openmpi && \
@@ -46,7 +52,8 @@ RUN mv /usr/local/bin/mpirun /usr/local/bin/mpirun.real && \
     echo '#!/bin/bash' > /usr/local/bin/mpirun && \
     echo 'mpirun.real --allow-run-as-root "$@"' >> /usr/local/bin/mpirun && \
     chmod a+x /usr/local/bin/mpirun
-# Configure OpenMPI to run good defaults: #   --bind-to none --map-by slot --mca btl_tcp_if_exclude lo,docker0 
+# Configure OpenMPI to run good defaults: 
+#   --bind-to none --map-by slot --mca btl_tcp_if_exclude lo,docker0 
 RUN echo "hwloc_base_binding_policy = none" >> /usr/local/etc/openmpi-mca-params.conf && \
     echo "rmaps_base_mapping_policy = slot" >> /usr/local/etc/openmpi-mca-params.conf && \
     echo "btl_tcp_if_exclude = lo,docker0" >> /usr/local/etc/openmpi-mca-params.conf
