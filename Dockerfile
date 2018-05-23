@@ -22,11 +22,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libjpeg-dev \
         libpng-dev \
         python$PYTHON_VERSION3 \
-        python$PYTHON_VERSION3-dev \
+        python$PYTHON_VERSION3-dev 
 		# python$PYTHON_VERSION2 \
         # python$PYTHON_VERSION2-dev 
 		# libgtk2.0-dev
-# RUN ln -s /usr/bin/python$PYTHON_VERSION /usr/bin/python
+RUN ln -s /usr/bin/python$PYTHON_VERSION3 /usr/bin/python
 RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
     python get-pip.py && \
     rm get-pip.py
