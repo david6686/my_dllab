@@ -25,7 +25,8 @@ RUN ln -s /usr/bin/python$PYTHON_VERSION /usr/bin/python
 RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
     python get-pip.py && \
     rm get-pip.py
-# Install TensorFlow and Keras RUN pip install --no-cache-dir tensorflow-gpu==$TENSORFLOW_VERSION keras h5py
+# Install TensorFlow and Keras 
+RUN pip install --no-cache-dir tensorflow-gpu==$TENSORFLOW_VERSION keras h5py
 # Install Open MPI RUN mkdir /tmp/openmpi && \
     cd /tmp/openmpi && \
     wget https://www.open-mpi.org/software/ompi/v3.0/downloads/openmpi-3.0.0.tar.gz && \
