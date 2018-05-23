@@ -88,4 +88,4 @@ RUN cat /etc/ssh/ssh_config | grep -v StrictHostKeyChecking > /etc/ssh/ssh_confi
 RUN apt-get install -y --no-install-recommends subversion && \
     svn checkout https://github.com/uber/horovod/trunk/examples && \
     rm -rf /examples/.svn
-CMD ['fish']
+
