@@ -6,8 +6,8 @@ ENV CUDNN_VERSION=7.0.5.15-1+cuda9.0
 ENV NCCL_VERSION=2.1.15-1+cuda9.0
 
 # Python 2.7 or 3.5 is supported by Ubuntu Xenial out of the box
-ENV PYTHON_VERSION=3.5
-
+ENV PYTHON_VERSION3=3.5
+ENV PYTHON_VERSION2=2.7
 RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list
 
 RUN apt-get update && apt-get install -y  --allow-downgrades --no-install-recommends \
@@ -17,16 +17,20 @@ RUN apt-get update && apt-get install -y  --allow-downgrades --no-install-recomm
         curl \
         vim \
         wget \
+		fish \
         ca-certificates \
         libcudnn7=$CUDNN_VERSION \
         libnccl2=$NCCL_VERSION \
         libnccl-dev=$NCCL_VERSION \
         libjpeg-dev \
         libpng-dev \
-        python$PYTHON_VERSION \
-        python$PYTHON_VERSION-dev
+        python$PYTHON_VERSION3 \
+        python$PYTHON_VERSION3-dev \
+		python$PYTHON_VERSION2 \
+        python$PYTHON_VERSION2-dev \
+		libgtk2.0-dev
 
-RUN ln -s /usr/bin/python$PYTHON_VERSION /usr/bin/python
+# RUN ln -s /usr/bin/python$PYTHON_VERSION /usr/bin/python
 
 RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
     python get-pip.py && \
@@ -81,3 +85,4 @@ RUN cat /etc/ssh/ssh_config | grep -v StrictHostKeyChecking > /etc/ssh/ssh_confi
 RUN apt-get install -y --no-install-recommends subversion && \
     svn checkout https://github.com/uber/horovod/trunk/examples && \
     rm -rf /examples/.svn
+CMD ['fish']
