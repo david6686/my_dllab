@@ -17,9 +17,6 @@ RUN apt-get update && apt-get install -y  --allow-downgrades --no-install-recomm
         wget \
 	fish \
         ca-certificates \
-        libcudnn7=$CUDNN_VERSION \
-        libnccl2=$NCCL_VERSION \
-        libnccl-dev=$NCCL_VERSION \
         libjpeg-dev \
         libpng-dev \
         python$PYTHON_VERSION3 \
