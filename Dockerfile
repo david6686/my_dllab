@@ -24,8 +24,9 @@ RUN apt-get update && apt-get install -y  --allow-downgrades --no-install-recomm
 	python$PYTHON_VERSION2 \
         python$PYTHON_VERSION2-dev \
 	libgtk2.0-dev \
-	python-pip \
-	python3-pip
+	python3-pip \
+	python-pip 
+
 
 
 # RUN ln -s /usr/bin/python3.5 /usr/bin/python3
