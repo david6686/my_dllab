@@ -8,7 +8,7 @@ RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
     bzip2 \
     ca-certificates \
     curl \
-    git \
+    git 
     
 #     fish \
 #     cmake \
