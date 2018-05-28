@@ -14,7 +14,13 @@ RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
     libpng-dev \
     build-essential &&\
     apt-get clean 
-
+RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-4.4.10-Linux-x86_64.sh -O ~/miniconda.sh && \
+    /bin/bash ~/miniconda.sh -b -p /opt/conda && \
+    rm ~/miniconda.sh && \
+    /opt/conda/bin/conda clean -tipsy && \
+    ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+    echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+    echo "conda activate base" >> ~/.bashrc
 # Install TensorFlow and Keras 
 RUN pip install  --no-cache-dir tensorflow-gpu==$TENSORFLOW_VERSION keras h5py
 Run conda install -y opencv
