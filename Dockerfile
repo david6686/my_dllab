@@ -1,43 +1,23 @@
 FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
-
-# TensorFlow version is tightly coupled to CUDA and cuDNN so it should be selected carefully
 ENV TENSORFLOW_VERSION=1.6.0
-
-# Python 2.7 or 3.5 is supported by Ubuntu Xenial out of the box
-ENV PYTHON_VERSION3=3.5
-ENV PYTHON_VERSION2=2.7
 RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list
+RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
+    wget \
+    bzip2 \
+    ca-certificates \
+    curl \
+    git \
+    fish \
+    cmake \
+    vim \
+    libjpeg-dev \ 
+    libpng-dev \
+    build-essential &&\
+    apt-get clean 
 
-RUN apt-get update && apt-get install -y  --allow-downgrades --no-install-recommends \
-        build-essential \
-        cmake \
-        git \
-        curl \
-        vim \
-        wget \
-	fish \
-        ca-certificates \
-        libjpeg-dev \
-        libpng-dev \
-        python$PYTHON_VERSION3 \
-        python$PYTHON_VERSION3-dev \
-	python$PYTHON_VERSION2 \
-        python$PYTHON_VERSION2-dev \
-	libgtk2.0-dev \
-	python3-pip \
-	python-pip 
-
-
-
-# RUN ln -s /usr/bin/python3.5 /usr/bin/python3
-#
-# RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
-#     python get-pip.py && \
-#     rm get-pip.py
-
-# Install TensorFlow and Keras
-RUN pip3 install --no-cache-dir tensorflow-gpu==$TENSORFLOW_VERSION keras h5py opencv-python
-
+# Install TensorFlow and Keras 
+RUN pip install  --no-cache-dir tensorflow-gpu==$TENSORFLOW_VERSION keras h5py
+Run conda install -y opencv
 # Install Open MPI
 RUN mkdir /tmp/openmpi && \
     cd /tmp/openmpi && \
@@ -66,11 +46,6 @@ RUN mv /usr/local/bin/mpirun /usr/local/bin/mpirun.real && \
 RUN echo "hwloc_base_binding_policy = none" >> /usr/local/etc/openmpi-mca-params.conf && \
     echo "rmaps_base_mapping_policy = slot" >> /usr/local/etc/openmpi-mca-params.conf && \
     echo "btl_tcp_if_exclude = lo,docker0" >> /usr/local/etc/openmpi-mca-params.conf
-
-# # Set default NCCL parameters
-# RUN echo NCCL_DEBUG=INFO >> /etc/nccl.conf && \
-#     echo NCCL_SOCKET_IFNAME=^docker0 >> /etc/nccl.conf
-
 # Install OpenSSH for MPI to communicate between containers
 RUN apt-get install -y --no-install-recommends openssh-client openssh-server && \
     mkdir -p /var/run/sshd
@@ -78,10 +53,17 @@ RUN apt-get install -y --no-install-recommends openssh-client openssh-server && 
 # Allow OpenSSH to talk to containers without asking for confirmation
 RUN cat /etc/ssh/ssh_config | grep -v StrictHostKeyChecking > /etc/ssh/ssh_config.new && \
     echo "    StrictHostKeyChecking no" >> /etc/ssh/ssh_config.new && \
-    mv /etc/ssh/ssh_config.new /etc/ssh/ssh_config
+    mv /etc/ssh/ssh_config.new /etc/ssh/ssh_config  
 
-# # Download examples
-# RUN apt-get install -y --no-install-recommends subversion && \
-#     svn checkout https://github.com/uber/horovod/trunk/examples && \
-#     rm -rf /examples/.svn
 
+RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-4.4.10-Linux-x86_64.sh -O ~/miniconda.sh && \
+    /bin/bash ~/miniconda.sh -b -p /opt/conda && \
+    rm ~/miniconda.sh && \
+    /opt/conda/bin/conda clean -tipsy && \
+    ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+    echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+    echo "conda activate base" >> ~/.bashrc
+ENV TINI_VERSION v0.16.1 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
+RUN chmod +x /usr/bin/tini
+ENTRYPOINT [ "/usr/bin/tini", "--" ]
+CMD [ "/bin/bash" ]
