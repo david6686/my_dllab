@@ -27,7 +27,7 @@ RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-4.4.10-Linux-x86
 # RUN pip install keras
 RUN pip install  --no-cache-dir tensorflow-gpu==$TENSORFLOW_VERSION keras h5py
 Run conda install -y opencv
-Install Open MPI
+#Install Open MPI
 RUN mkdir /tmp/openmpi && \
     cd /tmp/openmpi && \
     wget https://www.open-mpi.org/software/ompi/v3.0/downloads/openmpi-3.0.0.tar.gz && \
