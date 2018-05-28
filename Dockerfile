@@ -30,7 +30,7 @@ RUN apt-get update && apt-get install -y  --allow-downgrades --no-install-recomm
 
 
 # RUN ln -s /usr/bin/python3.5 /usr/bin/python3
-
+#
 # RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
 #     python get-pip.py && \
 #     rm get-pip.py
