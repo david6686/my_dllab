@@ -1,5 +1,7 @@
 FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
 ENV TENSORFLOW_VERSION=1.6.0
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 
+ENV PATH /opt/conda/bin:$PATH
 RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list
 # RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
 #     wget \
