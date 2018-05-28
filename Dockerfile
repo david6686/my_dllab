@@ -3,19 +3,20 @@ ENV TENSORFLOW_VERSION=1.6.0
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 
 ENV PATH /opt/conda/bin:$PATH
 RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list
-# RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
-#     wget \
-#     bzip2 \
-#     ca-certificates \
-#     curl \
-#     git \
+RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
+    wget \
+    bzip2 \
+    ca-certificates \
+    curl \
+    git \
+    
 #     fish \
 #     cmake \
 #     vim \
-#     libjpeg-dev \ 
+# #     libjpeg-dev \ 
 #     libpng-dev \
 #     build-essential &&\
-#     apt-get clean 
+    apt-get clean 
 RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-4.4.10-Linux-x86_64.sh -O ~/miniconda.sh && \
     /bin/bash ~/miniconda.sh -b -p /opt/conda && \
     rm ~/miniconda.sh && \
