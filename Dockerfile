@@ -1,4 +1,5 @@
 FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
+MAINTAINER Silentink (https://github.com/david6686/my_dllab)
 ENV TENSORFLOW_VERSION=1.6.0
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 
 ENV PATH /opt/conda/bin:$PATH
@@ -11,11 +12,15 @@ RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
     git   \
     fish \
     cmake \
-    vim \     
+    vim \   
+    emacs \
     libjpeg-dev \ 
     libpng-dev \
     build-essential 
 #     apt-get clean 
+#setup emacs
+git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
+#install miniconda3
 RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-4.4.10-Linux-x86_64.sh -O ~/miniconda.sh && \
     /bin/bash ~/miniconda.sh -b -p /opt/conda && \
     rm ~/miniconda.sh && \
@@ -67,5 +72,11 @@ RUN cat /etc/ssh/ssh_config | grep -v StrictHostKeyChecking > /etc/ssh/ssh_confi
 ENV TINI_VERSION v0.16.1 
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
 RUN chmod +x /usr/bin/tini
+
+#fish setup
+RUN sed -i -e "s/bin\/ash/usr\/bin\/fish/" /etc/passwd
+ENV SHELL /usr/bin/fish
+
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
-CMD [ "/bin/bash" ]
+# CMD [ "/bin/bash" ]
+CMD ["fish", "--version"]
