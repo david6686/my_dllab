@@ -5,6 +5,7 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 ENV PATH /opt/conda/bin:$PATH
 ENV TINI_VERSION v0.16.1 
 ENV SHELL /usr/bin/fish
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
 # ==================================================================
 # startup setup
 # ------------------------------------------------------------------
@@ -132,21 +133,22 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     ldconfig && \
     apt-get clean && \
     apt-get autoremove && \
-    rm -rf /var/lib/apt/lists/* /tmp/* ~/*      
+    rm -rf /var/lib/apt/lists/* /tmp/* ~/*   && \
+    chmod +x /usr/bin/tini && \
+#fish setup
+    sed -i -e "s/bin\/ash/usr\/bin\/fish/" /etc/passwd 
 # Set up notebook config
 COPY jupyter_notebook_config.py /root/.jupyter/
-
 # Jupyter has issues with being run directly: https://github.com/ipython/ipython/issues/7062
 COPY run_jupyter.sh /root/
 
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
-RUN chmod +x /usr/bin/tini && \
-#fish setup
-    sed -i -e "s/bin\/ash/usr\/bin\/fish/" /etc/passwd && \
+
+
+
 # Expose Ports for TensorBoard (6006), Ipython (8888)
 EXPOSE 6006 8888
 
 WORKDIR "/root"
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
-# CMD [ "/bin/bash" ]
-CMD ["fish", "--version"]
+CMD [ "/bin/bash" ]
+# CMD ["fish", "--version"]
