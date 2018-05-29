@@ -19,7 +19,7 @@ RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
     build-essential 
 #     apt-get clean 
 #setup emacs
-git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
+RUN git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
 #install miniconda3
 RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-4.4.10-Linux-x86_64.sh -O ~/miniconda.sh && \
     /bin/bash ~/miniconda.sh -b -p /opt/conda && \
@@ -30,8 +30,13 @@ RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-4.4.10-Linux-x86
     echo "conda activate base" >> ~/.bashrc
 # Install TensorFlow and Keras 
 # RUN pip install keras
-RUN pip install  --no-cache-dir tensorflow-gpu==$TENSORFLOW_VERSION keras h5py
-Run conda install -y opencv
+RUN pip install  --no-cache-dir tensorflow-gpu==$TENSORFLOW_VERSION keras h5py \
+    http://download.pytorch.org/whl/cu90/torch-0.4.0-cp36-cp36m-linux_x86_64.whl  \
+    torchvision
+Run conda install -y \
+    opencv \
+    tqdm \
+    dask
 #Install Open MPI
 RUN mkdir /tmp/openmpi && \
     cd /tmp/openmpi && \
