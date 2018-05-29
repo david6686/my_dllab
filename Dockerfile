@@ -19,7 +19,7 @@ RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
     build-essential 
 #     apt-get clean 
 #setup emacs
-RUN git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
+RUN git clone --depth 2 https://github.com/syl20bnr/spacemacs ~/.emacs.d
 #install miniconda3
 RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-4.4.10-Linux-x86_64.sh -O ~/miniconda.sh && \
     /bin/bash ~/miniconda.sh -b -p /opt/conda && \
@@ -36,7 +36,13 @@ RUN pip install  --no-cache-dir tensorflow-gpu==$TENSORFLOW_VERSION keras h5py \
 Run conda install -y \
     opencv \
     tqdm \
-    dask
+    dask \
+    numpy \
+    scikit-learn \
+    matplotlib \
+    Cython \
+    scipy \
+    jupyter
 #Install Open MPI
 RUN mkdir /tmp/openmpi && \
     cd /tmp/openmpi && \
@@ -82,6 +88,7 @@ RUN chmod +x /usr/bin/tini
 RUN sed -i -e "s/bin\/ash/usr\/bin\/fish/" /etc/passwd
 ENV SHELL /usr/bin/fish
 
+EXPOSE 8888
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
 # CMD [ "/bin/bash" ]
 CMD ["fish", "--version"]
