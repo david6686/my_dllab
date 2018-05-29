@@ -64,9 +64,10 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     h5py \
     http://download.pytorch.org/whl/cu90/torch-0.4.0-cp36-cp36m-linux_x86_64.whl  \
     torchvision \
+    jupyter \
     && \
 # ==================================================================
-# Install (conda) theano sklearn cipy numpy ... ML package
+# Install (conda) theano sklearn scipy numpy ... ML package
 # ------------------------------------------------------------------
     DEBIAN_FRONTEND=noninteractive $CONDA  \
     opencv \
@@ -77,7 +78,6 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     matplotlib \
     Cython \
     scipy \
-    jupyter \
     theano \
     && \
 # ==================================================================
@@ -148,7 +148,7 @@ COPY run_jupyter.sh /root/
 # Expose Ports for TensorBoard (6006), Ipython (8888)
 EXPOSE 6006 8888
 
-WORKDIR "/root"
+# WORKDIR "/root"
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
 CMD [ "/bin/bash" ]
 # CMD ["fish", "--version"]
