@@ -1,5 +1,16 @@
 FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
 MAINTAINER Silentink (https://github.com/david6686/my_dllab)
+# ==================================================================
+# module list
+# ------------------------------------------------------------------
+# python        3.6    (conda)
+# jupyter       latest (pip)
+# pytorch       latest  (pip)
+# tensorflow    1.8.0 (pip)
+# theano        1.0.1  (conda)
+# keras         latest (pip)
+# opencv        latest  (conda)
+# ==================================================================
 ENV TENSORFLOW_VERSION=1.8.0
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 
 ENV PATH /opt/conda/bin:$PATH
@@ -10,7 +21,7 @@ ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/
 # startup setup
 # ------------------------------------------------------------------
 RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list &&\
-    APT_INSTALL="apt-get install -y --no-install-recommends" && \
+    APT_INSTALL="apt-get update --fix-missing &&  apt-get install -y --no-install-recommends" && \
     PIP_INSTALL="pip install  --no-cache-dir" && \
     GIT_CLONE="git clone --depth 1" && \
     CONDA="conda install -y" && \
@@ -134,13 +145,14 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     #fish setup
     sed -i -e "s/bin\/ash/usr\/bin\/fish/" /etc/passwd  && \
     ldconfig && \
-    chmod +x /usr/bin/tini && \
     apt-get clean && \
-    apt-get autoremove 
+    rm -rf /var/lib/apt/lists/* /tmp/* ~/* && \
+    apt-get autoremove && \
+    chmod +x /usr/bin/tini
 # Set up notebook config
-COPY jupyter_notebook_config.py /root/.jupyter/
+# COPY jupyter_notebook_config.py /root/.jupyter/
 # Jupyter has issues with being run directly: https://github.com/ipython/ipython/issues/7062
-COPY run_jupyter.sh /root/
+# COPY run_jupyter.sh /root/
 
 
 
