@@ -161,5 +161,5 @@ EXPOSE 6006 8888
 
 # WORKDIR "/root"
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
-CMD [ "/bin/bash" ]
-# CMD ["fish", "--version"]
+# CMD [ "/bin/bash" ]
+CMD ["/usr/bin/fish"]
