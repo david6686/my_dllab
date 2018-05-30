@@ -146,7 +146,6 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     sed -i -e "s/bin\/ash/usr\/bin\/fish/" /etc/passwd  && \
     ldconfig && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* ~/* && \
     apt-get autoremove && \
     chmod +x /usr/bin/tini
 # Set up notebook config
