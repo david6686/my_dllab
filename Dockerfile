@@ -10,9 +10,9 @@ ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/
 # startup setup
 # ------------------------------------------------------------------
 RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list &&\
-    APT_INSTALL="apt-get install -y --no-install-recommends" && \
+    APT_INSTALL="apt-get update --fix-missing &&  apt-get install -y --no-install-recommends" && \
     PIP_INSTALL="pip install  --no-cache-dir" && \
-    GIT_CLONE="git clone --depth 5" && \
+    GIT_CLONE="git clone --depth 1" && \
     CONDA="conda install -y" && \
     rm -rf  /var/lib/apt/lists/* \
             /etc/apt/sources.list.d/cuda.list \
@@ -131,13 +131,13 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 # ==================================================================
 # config & cleanup
 # ------------------------------------------------------------------
+    #fish setup
+    sed -i -e "s/bin\/ash/usr\/bin\/fish/" /etc/passwd  && \
     ldconfig && \
+    chmod +x /usr/bin/tini && \
     apt-get clean && \
     apt-get autoremove && \
-    rm -rf /var/lib/apt/lists/* /tmp/* ~/*   && \
-    chmod +x /usr/bin/tini && \
-#fish setup
-    sed -i -e "s/bin\/ash/usr\/bin\/fish/" /etc/passwd 
+    rm -rf /var/lib/apt/lists/* /tmp/* ~/*
 # Set up notebook config
 COPY jupyter_notebook_config.py /root/.jupyter/
 # Jupyter has issues with being run directly: https://github.com/ipython/ipython/issues/7062
