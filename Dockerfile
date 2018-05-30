@@ -1,6 +1,6 @@
 FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
 MAINTAINER Silentink (https://github.com/david6686/my_dllab)
-ENV TENSORFLOW_VERSION=1.6.0
+ENV TENSORFLOW_VERSION=1.8.0
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 
 ENV PATH /opt/conda/bin:$PATH
 ENV TINI_VERSION v0.16.1 
@@ -92,6 +92,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     make -j $(nproc) all && \
     make install && \
     ldconfig && \
+    cd ~ &&\
     rm -rf /tmp/openmpi \ 
     && \
 # ==================================================================
