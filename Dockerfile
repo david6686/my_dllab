@@ -21,7 +21,7 @@ ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/
 # startup setup
 # ------------------------------------------------------------------
 RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list &&\
-    APT_INSTALL="apt-get update --fix-missing &&  apt-get install -y --no-install-recommends" && \
+    APT_INSTALL=" apt-get install -y --no-install-recommends" && \
     PIP_INSTALL="pip install  --no-cache-dir" && \
     GIT_CLONE="git clone --depth 1" && \
     CONDA="conda install -y" && \
