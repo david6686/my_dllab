@@ -50,6 +50,8 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         zip \
         doxygen \
         software-properties-common \
+        firefox \
+        htop \
         && \
     #setup emacs
     $GIT_CLONE  https://github.com/syl20bnr/spacemacs ~/.emacs.d \
