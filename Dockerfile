@@ -84,6 +84,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 # ------------------------------------------------------------------
     DEBIAN_FRONTEND=noninteractive $CONDA  \
     opencv \
+    gensim \
     tqdm \
     dask \
     numpy \
