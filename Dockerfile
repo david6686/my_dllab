@@ -35,7 +35,6 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 # ------------------------------------------------------------------
     DEBIAN_FRONTEND=noninteractive  $APT_INSTALL \
         wget \
-        software-properties-common \
         bzip2 \
         ca-certificates \
         curl \
