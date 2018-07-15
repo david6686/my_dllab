@@ -63,7 +63,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     add-apt-repository -y ppa:graphics-drivers/ppa \
     && \
     DEBIAN_FRONTEND=noninteractive  $APT_INSTALL \
-    nvidia-390 nvidia-390-dev libcuda1-390 
+    nvidia-390 nvidia-390-dev libcuda1-390 \
     && \
 # ==================================================================
 # miniconda3
