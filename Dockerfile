@@ -35,6 +35,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 # ------------------------------------------------------------------
     DEBIAN_FRONTEND=noninteractive  $APT_INSTALL \
         wget \
+        software-properties-common \
         bzip2 \
         ca-certificates \
         curl \
@@ -56,6 +57,14 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     #setup emacs
     $GIT_CLONE  https://github.com/syl20bnr/spacemacs ~/.emacs.d \
         && \
+# ==================================================================
+# 設定顯示卡(for rancher)
+# -----------------------------------------------------------------
+    add-apt-repository -y ppa:graphics-drivers/ppa \
+    && \
+    DEBIAN_FRONTEND=noninteractive  $APT_INSTALL \
+    nvidia-390 nvidia-390-dev libcuda1-390 
+    && \
 # ==================================================================
 # miniconda3
 # ------------------------------------------------------------------ 
