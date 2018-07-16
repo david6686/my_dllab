@@ -77,6 +77,16 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     echo "conda activate base" >> ~/.bashrc \
     && \
 # ==================================================================
+# intelpython-full
+# ------------------------------------------------------------------ 
+    conda config --add channels intel\
+    && conda install  -y -q intelpython3_full=2018.0.3 python=3 \
+    && conda clean --all \
+    && apt-get update -qqq \
+    && apt-get install -y -q g++ \
+    && apt-get autoremove \
+    && \
+# ==================================================================
 # 設定顯示卡(for rancher)
 # -----------------------------------------------------------------
     add-apt-repository -y ppa:graphics-drivers/ppa \
