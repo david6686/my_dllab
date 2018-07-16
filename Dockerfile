@@ -12,6 +12,7 @@ MAINTAINER Silentink (https://github.com/david6686/my_dllab)
 # opencv        latest  (conda)
 # ==================================================================
 ENV TENSORFLOW_VERSION=1.8.0
+ENV NCCL_VERSION=2.2.12-1+cuda9.0
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 
 ENV PATH /opt/conda/bin:$PATH
 ENV TINI_VERSION v0.16.1 
@@ -36,6 +37,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     DEBIAN_FRONTEND=noninteractive  $APT_INSTALL \
         wget \
         bzip2 \
+        software-properties-common \
         ca-certificates \
         curl \
         git \
@@ -47,27 +49,25 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         libpng-dev \
         build-essential \
         unzip \
+        autojump \
         zip \
+        libnccl2=${NCCL_VERSION} \
+        libnccl-dev=${NCCL_VERSION} \
         doxygen \
-        software-properties-common \
         firefox \
         htop \
+        tmux \
         && \
     #setup emacs
     $GIT_CLONE  https://github.com/syl20bnr/spacemacs ~/.emacs.d \
         && \
-# ==================================================================
-# 設定顯示卡(for rancher)
-# -----------------------------------------------------------------
-    add-apt-repository -y ppa:graphics-drivers/ppa \
-    && \
-    DEBIAN_FRONTEND=noninteractive  $APT_INSTALL \
-    nvidia-390 nvidia-390-dev libcuda1-390 \
-    && \
+    #setup autojump
+    echo 'source /usr/share/autojump/autojump.bash' >>~/.bash_profile \
+        && \
 # ==================================================================
 # miniconda3
 # ------------------------------------------------------------------ 
-#install miniconda3
+    #install miniconda3
     wget --quiet https://repo.continuum.io/miniconda/Miniconda3-4.4.10-Linux-x86_64.sh -O ~/miniconda.sh && \
     /bin/bash ~/miniconda.sh -b -p /opt/conda && \
     rm ~/miniconda.sh && \
@@ -75,6 +75,15 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     echo "conda activate base" >> ~/.bashrc \
+    && \
+# ==================================================================
+# 設定顯示卡(for rancher)
+# -----------------------------------------------------------------
+    add-apt-repository -y ppa:graphics-drivers/ppa \
+    && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive  $APT_INSTALL \
+    nvidia-390 nvidia-390-dev libcuda1-390 \
     && \
 # ==================================================================
 # Install (pip) tensorflow keras pytorch
@@ -158,7 +167,8 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     ldconfig && \
     apt-get clean && \
     apt-get autoremove && \
-    chmod +x /usr/bin/tini
+    chmod +x /usr/bin/tini && \
+    curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs https://git.io/fisher
 # Set up notebook config
 # COPY jupyter_notebook_config.py /root/.jupyter/
 # Jupyter has issues with being run directly: https://github.com/ipython/ipython/issues/7062
