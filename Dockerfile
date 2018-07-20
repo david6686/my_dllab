@@ -46,14 +46,20 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         git \
         fish \
         cmake \
+        glances \
+        nano \
+        pv \
+        ms \
         vim \
         emacs \
         libjpeg-dev\
         libpng-dev \
         build-essential \
         unzip \
-        autojump \
         zip \
+        unrar \ 
+        rar \
+        autojump \
         doxygen \
         firefox \
         htop \
@@ -63,6 +69,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     $GIT_CLONE  https://github.com/syl20bnr/spacemacs ~/.emacs.d \
         && \
     #setup autojump
+    echo 'source /usr/share/autojump/autojump.bash' >>~/.bash_profile && \
     echo 'source /usr/share/autojump/autojump.bash' >>~/.bash_profile \
         && \
 # ==================================================================
@@ -91,6 +98,20 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     DEBIAN_FRONTEND=noninteractive  $APT_INSTALL \
     nvidia-390 nvidia-390-dev libcuda1-390 \
     && \
+# ==================================================================
+# Install (pip) tensorflow keras pytorch
+# ------------------------------------------------------------------
+    $PIP_INSTALL \
+    tensorflow-gpu==$TENSORFLOW_VERSION \
+    keras \
+    h5py \
+    xmltodict \
+    jupyter \
+    thefuck \
+    http://download.pytorch.org/whl/cu90/torch-0.4.0-cp36-cp36m-linux_x86_64.whl  \
+    torchvision \
+    imgaug \
+    && \
 # ================================================================== 
 # intelpython-full 
 # ------------------------------------------------------------------  
@@ -102,18 +123,6 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 # +
 #     && apt-get autoremove \ 
 #     && \ 
-# ================================================================== 
-# ==================================================================
-# Install (pip) tensorflow keras pytorch
-# ------------------------------------------------------------------
-    $PIP_INSTALL \
-    tensorflow-gpu==$TENSORFLOW_VERSION \
-    keras \
-    h5py \
-    http://download.pytorch.org/whl/cu90/torch-0.4.0-cp36-cp36m-linux_x86_64.whl  \
-    torchvision \
-    jupyter \
-    && \
 # ==================================================================
 # Install (conda) theano sklearn scipy numpy ... ML package
 # ------------------------------------------------------------------
@@ -123,11 +132,14 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     tqdm \
     dask \
     numpy \
+    jupyter notebook \
     scikit-learn \
     matplotlib \
     Cython \
     scipy \
     theano \
+    && \
+    conda install -c conda-forge jupyterlab \
     && \
 # ==================================================================
 # Install Open MPI
