@@ -49,7 +49,6 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         glances \
         nano \
         pv \
-        ms \
         vim \
         emacs \
         libjpeg-dev\
