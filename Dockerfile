@@ -131,7 +131,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     tqdm \
     dask \
     numpy \
-    jupyter notebook \
+#     jupyter notebook \
     scikit-learn \
     matplotlib \
     Cython \
