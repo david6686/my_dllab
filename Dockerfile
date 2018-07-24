@@ -125,13 +125,15 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 # ==================================================================
 # Install (conda) theano sklearn scipy numpy ... ML package
 # ------------------------------------------------------------------
+    conda config --add channels intel \
+    && \
     DEBIAN_FRONTEND=noninteractive $CONDA  \
     opencv \
     gensim \
     tqdm \
     dask \
     numpy \
-#     jupyter notebook \
+    # jupyter notebook \
     scikit-learn \
     matplotlib \
     Cython \
