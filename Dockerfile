@@ -44,6 +44,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         ca-certificates \
         curl \
         git \
+        figlet \
         fish \
         cmake \
         glances \
@@ -139,6 +140,8 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     Cython \
     scipy \
     theano \
+    protobuf \
+    libprotobuf=3.2.0 \
     && \
     conda install -c conda-forge jupyterlab \
     && \
@@ -203,7 +206,11 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     apt-get clean && \
     apt-get autoremove && \
     chmod +x /usr/bin/tini && \
-    curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs https://git.io/fisher
+    curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs https://git.io/fisher &&\
+    echo 'nvidia-smi' >>/root/.bashrc && \
+    echo 'figlet "Hello World"' >>/root/.bashrc 
+
+
 # Set up notebook config
 # COPY jupyter_notebook_config.py /root/.jupyter/
 # Jupyter has issues with being run directly: https://github.com/ipython/ipython/issues/7062
