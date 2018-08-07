@@ -11,6 +11,7 @@ MAINTAINER Silentink (https://github.com/david6686/my_dllab)
 # theano        1.0.1  (conda)
 # keras         latest (pip)
 # opencv        latest  (conda)
+# tensorflow.js latest (pip)
 # ==================================================================
 ENV TENSORFLOW_VERSION=1.8.0
 # ENV CUDNN_VERSION=7.0.5.15-1+cuda9.0
@@ -96,7 +97,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     && \
     apt-get update &&\
     DEBIAN_FRONTEND=noninteractive  $APT_INSTALL \
-    nvidia-390 nvidia-390-dev libcuda1-390 \
+    nvidia-390 nvidia-390-dev libcuda1-390 nvidia-settings\
     && \
 # ==================================================================
 # Install (pip) tensorflow keras pytorch
@@ -111,6 +112,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     http://download.pytorch.org/whl/cu90/torch-0.4.0-cp36-cp36m-linux_x86_64.whl  \
     torchvision \
     imgaug \
+    tensorflowjs \
     && \
 # ================================================================== 
 # intelpython-full 
