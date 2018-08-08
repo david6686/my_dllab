@@ -211,7 +211,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs https://git.io/fisher &&\
     echo 'nvidia-smi' >>/root/.bashrc && \
     echo 'figlet "Wellcome"' >>/root/.bashrc && \
-    source (conda info --root)/etc/fish/conf.d/conda.fish && \
+    echo 'source (conda info --root)/etc/fish/conf.d/conda.fish' >>~/.config/fish/config.fish && \
     #設定 matplotlib 在沒有gui環境下也能跑(backend設定為Agg)
     mkdir -p /root/.config/matplotlib && \
     echo "backend : Agg" > /root/.config/matplotlib/matplotlibrc
