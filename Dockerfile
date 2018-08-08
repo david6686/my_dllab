@@ -48,6 +48,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         figlet \
         fish \
         cmake \
+        screen \
         glances \
         nano \
         pv \
@@ -109,6 +110,8 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     xmltodict \
     jupyter \
     thefuck \
+    psrecord \
+    s-tui \
     http://download.pytorch.org/whl/cu90/torch-0.4.0-cp36-cp36m-linux_x86_64.whl  \
     torchvision \
     imgaug \
