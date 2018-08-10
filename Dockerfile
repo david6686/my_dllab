@@ -8,6 +8,8 @@ MAINTAINER Silentink (https://github.com/david6686/my_dllab)
 # jupyter       latest (pip)
 # pytorch       latest  (pip)
 # tensorflow    1.8.0 (pip)
+# tensorflow-gpu    1.8.0 (pip)
+# tensorflowjs    1.8.0 (latest)
 # theano        1.0.1  (conda)
 # keras         latest (pip)
 # opencv        latest  (conda)
@@ -115,7 +117,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     http://download.pytorch.org/whl/cu90/torch-0.4.0-cp36-cp36m-linux_x86_64.whl  \
     torchvision \
     imgaug \
-    tensorflowjs \
+#     tensorflowjs \
     && \
 # ================================================================== 
 # intelpython-full 
