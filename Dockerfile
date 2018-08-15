@@ -63,6 +63,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         zip \
         unrar \ 
         rar \
+        screen \
         autojump \
         doxygen \
         firefox \
@@ -73,7 +74,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     $GIT_CLONE  https://github.com/syl20bnr/spacemacs ~/.emacs.d \
         && \
     #setup autojump
-    echo 'source /usr/share/autojump/autojump.bash' >>~/.bash_profile && \
+    # echo 'source /usr/share/autojump/autojump.bash' >>~/.bash_profile && \
     echo 'source /usr/share/autojump/autojump.bash' >>~/.bash_profile \
         && \
 # ==================================================================
@@ -113,7 +114,6 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     jupyter \
     thefuck \
     psrecord \
-    s-tui \
     http://download.pytorch.org/whl/cu90/torch-0.4.0-cp36-cp36m-linux_x86_64.whl  \
     torchvision \
     imgaug \
