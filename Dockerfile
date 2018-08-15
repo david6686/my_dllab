@@ -59,6 +59,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         zip \
         unrar \ 
         rar \
+        screen \
         autojump \
         doxygen \
         firefox \
@@ -69,7 +70,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     $GIT_CLONE  https://github.com/syl20bnr/spacemacs ~/.emacs.d \
         && \
     #setup autojump
-    echo 'source /usr/share/autojump/autojump.bash' >>~/.bash_profile && \
+    # echo 'source /usr/share/autojump/autojump.bash' >>~/.bash_profile && \
     echo 'source /usr/share/autojump/autojump.bash' >>~/.bash_profile \
         && \
 # ==================================================================
@@ -96,7 +97,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     && \
     apt-get update &&\
     DEBIAN_FRONTEND=noninteractive  $APT_INSTALL \
-    nvidia-390 nvidia-390-dev libcuda1-390 \
+    nvidia-390 nvidia-390-dev libcuda1-390 nvidia-settings\
     && \
 # ==================================================================
 # Install (pip) tensorflow keras pytorch
@@ -108,6 +109,8 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     xmltodict \
     jupyter \
     thefuck \
+    psrecord \ 
+    s-tui \
     http://download.pytorch.org/whl/cu90/torch-0.4.0-cp36-cp36m-linux_x86_64.whl  \
     torchvision \
     imgaug \
@@ -208,7 +211,8 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     chmod +x /usr/bin/tini && \
     curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs https://git.io/fisher &&\
     echo 'nvidia-smi' >>/root/.bashrc && \
-    echo 'figlet "Hello World"' >>/root/.bashrc && \
+    echo 'figlet "Wellcome"' >>/root/.bashrc && \ 
+    echo 'source (conda info --root)/etc/fish/conf.d/conda.fish' >>~/.config/fish/config.fish && \ 
     #設定 matplotlib 在沒有gui環境下也能跑(backend設定為Agg)
     mkdir -p /root/.config/matplotlib && \
     echo "backend : Agg" > /root/.config/matplotlib/matplotlibrc
