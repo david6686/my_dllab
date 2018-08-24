@@ -52,6 +52,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         bash \
         wget \
         bzip2 \
+        emacs25 \
         software-properties-common \
         ca-certificates \
         curl \
