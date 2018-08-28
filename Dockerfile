@@ -93,6 +93,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     && wget -qO- "${SCP_URL}" | tar xz -C /usr/local/share/fonts \
     && wget -q "${NNG_URL}" -P /usr/local/share/fonts \
     && fc-cache -fv \
+    && \
     $GIT_CLONE  https://github.com/syl20bnr/spacemacs ~/.emacs.d \
         && \
     #setup autojump
