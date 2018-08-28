@@ -50,12 +50,15 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         language-pack-zh-hant \
         language-support-zh-hant \
         bash \
+        cpulimit \
+        sudo \
         wget \
         bzip2 \
         emacs25 \
         software-properties-common \
         ca-certificates \
         curl \
+        cpulimit \
         dbus-x11 \
         fontconfig \
         git \
@@ -63,7 +66,6 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         fish \
         cmake \
         screen \
-        glances \
         nano \
         pv \
         vim \
@@ -86,7 +88,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         tmux \
         && \
     #setup emacs
-    && mkdir -p /usr/local/share/fonts \
+    mkdir -p /usr/local/share/fonts \
     && wget -qO- "${SCP_URL}" | tar xz -C /usr/local/share/fonts \
     && wget -q "${NNG_URL}" -P /usr/local/share/fonts \
     && fc-cache -fv \
@@ -130,6 +132,8 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     keras \
     h5py \
     xmltodict \
+    glances \
+    nvidia-ml-py3 \
     jupyter \
     thefuck \
     psrecord \
