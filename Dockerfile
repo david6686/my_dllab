@@ -47,14 +47,16 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 # apt-get
 # ------------------------------------------------------------------
     DEBIAN_FRONTEND=noninteractive  $APT_INSTALL \
+        #語言包
+        language-pack-en-base \
         language-pack-zh-hant \
-        language-support-zh-hant \
+        language-pack-zh-hant-base \
         bash \
         cpulimit \
         sudo \
         wget \
         bzip2 \
-        emacs25 \
+#         emacs25 \
         software-properties-common \
         ca-certificates \
         curl \
@@ -71,7 +73,6 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         vim \
         emacs \
         libjpeg-dev\
-        language-pack-en-base \
         libgl1-mesa-glx \
         libpng-dev \
         build-essential \
