@@ -92,6 +92,9 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         tmux \
         && \
     #setup emacs
+    add-apt-repository ppa:kelleyk/emacs &&\
+    apt-get update &&\
+    DEBIAN_FRONTEND=noninteractive  $APT_INSTALL emacs25 &&\
     mkdir -p /usr/local/share/fonts \
     && wget -qO- "${SCP_URL}" | tar xz -C /usr/local/share/fonts \
     && wget -q "${NNG_URL}" -P /usr/local/share/fonts \
@@ -123,8 +126,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     #     libnccl2=${NCCL_VERSION} \
     #     libnccl-dev=${NCCL_VERSION} \
     #     && \
-    add-apt-repository -y ppa:graphics-drivers/ppa &&\
-    add-apt-repository ppa:kelleyk/emacs \
+    add-apt-repository -y ppa:graphics-drivers/ppa \
     && \
     apt-get update &&\
     DEBIAN_FRONTEND=noninteractive  $APT_INSTALL \
