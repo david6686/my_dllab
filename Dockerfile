@@ -56,7 +56,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         sudo \
         wget \
         bzip2 \
-#         emacs25 \
+        emacs25 \
         software-properties-common \
         ca-certificates \
         curl \
@@ -64,6 +64,8 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         dbus-x11 \
         fontconfig \
         git \
+        rlwrap \
+        silversearcher-ag \
         figlet \
         fish \
         cmake \
@@ -71,7 +73,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         nano \
         pv \
         vim \
-        emacs \
+#         emacs \
         libjpeg-dev\
         libgl1-mesa-glx \
         libpng-dev \
@@ -81,6 +83,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         gzip \
         unrar \ 
         rar \
+        tar \
         screen \
         autojump \
         doxygen \
@@ -120,7 +123,8 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     #     libnccl2=${NCCL_VERSION} \
     #     libnccl-dev=${NCCL_VERSION} \
     #     && \
-    add-apt-repository -y ppa:graphics-drivers/ppa \
+    add-apt-repository -y ppa:graphics-drivers/ppa &&\
+    add-apt-repository ppa:kelleyk/emacs \
     && \
     apt-get update &&\
     DEBIAN_FRONTEND=noninteractive  $APT_INSTALL \
