@@ -40,7 +40,11 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     # rm -rf  /var/lib/apt/lists/* \
     #         /etc/apt/sources.list.d/cuda.list \
     #         /etc/apt/sources.list.d/nvidia-ml.list && \
-    apt-get update  --fix-missing\
+    apt-get update  --fix-missing && \
+    DEBIAN_FRONTEND=noninteractive  $APT_INSTALL software-properties-common && \
+    add-apt-repository -y ppa:graphics-drivers/ppa && \
+    add-apt-repository ppa:kelleyk/emacs &&\
+    apt-get update \
     && \
 
 # ==================================================================
@@ -90,11 +94,12 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         firefox \
         htop \
         tmux \
+        emacs25 \
         && \
     #setup emacs
-    add-apt-repository ppa:kelleyk/emacs &&\
-    apt-get update &&\
-    DEBIAN_FRONTEND=noninteractive  $APT_INSTALL emacs25 &&\
+#     add-apt-repository ppa:kelleyk/emacs &&\
+#     apt-get update &&\
+#     DEBIAN_FRONTEND=noninteractive  $APT_INSTALL emacs25 &&\
     mkdir -p /usr/local/share/fonts \
     && wget -qO- "${SCP_URL}" | tar xz -C /usr/local/share/fonts \
     && wget -q "${NNG_URL}" -P /usr/local/share/fonts \
@@ -126,9 +131,9 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     #     libnccl2=${NCCL_VERSION} \
     #     libnccl-dev=${NCCL_VERSION} \
     #     && \
-    add-apt-repository -y ppa:graphics-drivers/ppa \
-    && \
-    apt-get update &&\
+#     add-apt-repository -y ppa:graphics-drivers/ppa \
+#     && \
+#     apt-get update &&\
     DEBIAN_FRONTEND=noninteractive  $APT_INSTALL \
     nvidia-390 nvidia-390-dev libcuda1-390 nvidia-settings\
     && \
