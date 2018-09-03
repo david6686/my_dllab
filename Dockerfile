@@ -14,6 +14,8 @@ MAINTAINER Silentink (https://github.com/david6686/my_dllab)
 # keras         latest (pip)
 # opencv        latest  (conda)
 # tensorflow.js latest (pip)
+# onnx          latest (pip)
+# cntk          latest (pip)
 # ==================================================================
 ENV TENSORFLOW_VERSION=1.8.0
 # ENV CUDNN_VERSION=7.0.5.15-1+cuda9.0
@@ -37,9 +39,9 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     PIP_INSTALL="pip install  --no-cache-dir" && \
     GIT_CLONE="git clone --depth 1" && \
     CONDA="conda install -y" && \
-    # rm -rf  /var/lib/apt/lists/* \
-    #         /etc/apt/sources.list.d/cuda.list \
-    #         /etc/apt/sources.list.d/nvidia-ml.list && \
+    rm -rf  /var/lib/apt/lists/* \
+            /etc/apt/sources.list.d/cuda.list \
+            /etc/apt/sources.list.d/nvidia-ml.list && \
     apt-get update  --fix-missing && \
     DEBIAN_FRONTEND=noninteractive  $APT_INSTALL software-properties-common && \
     add-apt-repository -y ppa:graphics-drivers/ppa && \
@@ -60,6 +62,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         sudo \
         wget \
         bzip2 \
+        nmon \
 #         emacs25 \
         software-properties-common \
         ca-certificates \
@@ -88,13 +91,14 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         unrar \ 
         rar \
         tar \
-        screen \
         autojump \
         doxygen \
         firefox \
         htop \
         tmux \
         emacs25 \
+        protobuf-compiler \
+        libprotoc-dev \
         && \
     #setup emacs
 #     add-apt-repository ppa:kelleyk/emacs &&\
@@ -153,6 +157,8 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     http://download.pytorch.org/whl/cu90/torch-0.4.0-cp36-cp36m-linux_x86_64.whl  \
     torchvision \
     imgaug \
+    onnx \
+    cntk-gpu \
 #     tensorflowjs \
     && \
 # ================================================================== 
@@ -188,6 +194,15 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     && \
     conda install -c conda-forge jupyterlab \
     && \
+# ==================================================================
+# boost
+# ------------------------------------------------------------------
+
+    wget -O ~/boost.tar.gz https://dl.bintray.com/boostorg/release/1.65.1/source/boost_1_65_1.tar.gz && \
+    tar -zxf ~/boost.tar.gz -C ~ && \
+    cd ~/boost_* && \
+    ./bootstrap.sh --with-python=python3.6 && \
+    ./b2 install --prefix=/usr/local && \
 # ==================================================================
 # Install Open MPI
 # ------------------------------------------------------------------
@@ -249,6 +264,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     apt-get clean && \
     apt-get autoremove && \
     chmod +x /usr/bin/tini && \
+    rm -rf /var/lib/apt/lists/* /tmp/* ~/* && \
     curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs https://git.io/fisher &&\
     echo 'nvidia-smi' >>/root/.bashrc && \
     echo 'figlet "Wellcome"' >>/root/.bashrc && \
