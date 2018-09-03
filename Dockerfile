@@ -198,11 +198,11 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 # boost
 # ------------------------------------------------------------------
 
-    wget -O ~/boost.tar.gz https://dl.bintray.com/boostorg/release/1.65.1/source/boost_1_65_1.tar.gz && \
-    tar -zxf ~/boost.tar.gz -C ~ && \
-    cd ~/boost_* && \
-    ./bootstrap.sh --with-python=python3.6 && \
-    ./b2 install --prefix=/usr/local && \
+    # wget -O ~/boost.tar.gz https://dl.bintray.com/boostorg/release/1.65.1/source/boost_1_65_1.tar.gz && \
+    # tar -zxf ~/boost.tar.gz -C ~ && \
+    # cd ~/boost_* && \
+    # ./bootstrap.sh --with-python=python3.6 && \
+    # ./b2 install --prefix=/usr/local && \
 # ==================================================================
 # Install Open MPI
 # ------------------------------------------------------------------
