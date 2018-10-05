@@ -1,6 +1,0 @@
-image: docker:stable
-
-services:
-    - docker:stable-dind
-before_script:
-    - docker login -u "${REGISTRY_USER}" -p "${REGISTRY_TOKEN}"
