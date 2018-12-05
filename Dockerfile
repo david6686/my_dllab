@@ -1,23 +1,28 @@
-FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
+FROM nvidia/cuda:10.0-cudnn7-devel
 # FROM nvidia/cuda:9.0-devel-ubuntu16.04
 MAINTAINER Silentink (https://github.com/david6686/my_dllab)
 # ==================================================================
 # module list
 # ------------------------------------------------------------------
-# python        3.6    (conda)
-# jupyter       latest (pip)
-# pytorch       latest  (pip)
-# tensorflow    1.8.0 (pip)
-# tensorflow-gpu    1.8.0 (pip)
-# tensorflowjs    1.8.0 (latest)
-# theano        1.0.1  (conda)
-# keras         latest (pip)
-# opencv        latest  (conda)
-# tensorflow.js latest (pip)
-# onnx          latest (pip)
-# cntk          latest (pip)
+# python            3.6    (conda)
+# jupyter           latest (pip)
+# pytorch           latest  (pip)
+# tensorflow        1.12.0 (pip)
+# tensorflow-gpu    1.12.0 (conda)
+# tensorflowjs      1.8.0 (latest)
+# theano            1.0.1  (conda)
+# keras             latest (pip)
+# opencv            latest  (conda)
+# tensorflow.js     latest (pip)
+# onnx              latest (pip)
+# cntk              latest (pip)
+# Bazel             0.15.0
 # ==================================================================
-ENV TENSORFLOW_VERSION=1.8.0
+
+# ==================================================================
+# ENV SETTING
+# ------------------------------------------------------------------
+ENV TENSORFLOW_VERSION=1.12.0
 # ENV CUDNN_VERSION=7.0.5.15-1+cuda9.0
 # ENV NCCL_VERSION=2.2.13-1+cuda9.0
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 
@@ -25,16 +30,20 @@ ENV PATH /opt/conda/bin:$PATH
 ENV TINI_VERSION v0.16.1 
 ENV SHELL /usr/bin/fish
 # ENV UHOME="/home/emacs"
+ENV BAZEL_VERSION 0.15.0
 # Default fonts
 ENV NNG_URL="https://github.com/google/fonts/raw/master/ofl/\
 nanumgothic/NanumGothic-Regular.ttf" \
     SCP_URL="https://github.com/adobe-fonts/source-code-pro/\
 archive/2.030R-ro/1.050R-it.tar.gz"
+# tini
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
+
 # ==================================================================
 # startup setup
 # ------------------------------------------------------------------
 RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list &&\
+    #commend set
     APT_INSTALL="apt-get install -y --no-install-recommends" && \
     PIP_INSTALL="pip install  --no-cache-dir" && \
     GIT_CLONE="git clone --depth 1" && \
@@ -44,11 +53,10 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
             /etc/apt/sources.list.d/nvidia-ml.list && \
     apt-get update  --fix-missing && \
     DEBIAN_FRONTEND=noninteractive  $APT_INSTALL software-properties-common && \
-    add-apt-repository -y ppa:graphics-drivers/ppa && \
+    add-apt-repository -y ppa:graphics-drivers/ppa && \    
     add-apt-repository ppa:kelleyk/emacs &&\
     apt-get update \
     && \
-
 # ==================================================================
 # apt-get
 # ------------------------------------------------------------------
@@ -57,17 +65,24 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         language-pack-en-base \
         language-pack-zh-hant \
         language-pack-zh-hant-base \
-        bash \
-        cpulimit \
+        #cuda
+        # cuda-command-line-tools-10-0 \
+        # cuda-cublas-dev-10-0 \
+        # cuda-cudart-dev-10-0 \
+        # cuda-cufft-dev-10-0 \
+        # cuda-curand-dev-10-0 \
+        # cuda-cusolver-dev-10-0 \
+        # cuda-cusparse-dev-10-0 \
+        #other
+        pkg-config \
+        bash\
+        cpulimit \    
         sudo \
         wget \
-        bzip2 \
         nmon \
-#         emacs25 \
         software-properties-common \
         ca-certificates \
         curl \
-        cpulimit \
         dbus-x11 \
         fontconfig \
         git \
@@ -80,11 +95,11 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         nano \
         pv \
         vim \
-#         emacs \
         libjpeg-dev\
         libgl1-mesa-glx \
         libpng-dev \
         build-essential \
+        bzip2 \
         unzip \
         zip \
         gzip \
@@ -100,19 +115,28 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         protobuf-compiler \
         libprotoc-dev \
         && \
-    #setup emacs
-#     add-apt-repository ppa:kelleyk/emacs &&\
-#     apt-get update &&\
-#     DEBIAN_FRONTEND=noninteractive  $APT_INSTALL emacs25 &&\
+    #Bazel
+    echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list &&\
+    curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add - && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive  $APT_INSTALL bazel \
+        && \
+# ==================================================================
+# set font
+# ------------------------------------------------------------------
     mkdir -p /usr/local/share/fonts \
     && wget -qO- "${SCP_URL}" | tar xz -C /usr/local/share/fonts \
     && wget -q "${NNG_URL}" -P /usr/local/share/fonts \
     && fc-cache -fv \
     && \
+# ==================================================================
+# spaceemacs/emacs setting
+# ------------------------------------------------------------------
     $GIT_CLONE  https://github.com/syl20bnr/spacemacs ~/.emacs.d \
         && \
-    #setup autojump
-    # echo 'source /usr/share/autojump/autojump.bash' >>~/.bash_profile && \
+# ==================================================================
+# setup autojump
+# ------------------------------------------------------------------  
     echo 'source /usr/share/autojump/autojump.bash' >>~/.bash_profile \
         && \
 # ==================================================================
@@ -128,7 +152,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     echo "conda activate base" >> ~/.bashrc \
     && \
 # ==================================================================
-# 設定顯示卡(for rancher)
+# 設定顯示卡(for rancher)  (removed)
 # -----------------------------------------------------------------
     # apt-get update && apt-get install -y --no-install-recommends --allow-downgrades\
     #     libcudnn7=${CUDNN_VERSION} \
@@ -141,6 +165,21 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     # DEBIAN_FRONTEND=noninteractive  $APT_INSTALL \
     # nvidia-390 nvidia-390-dev libcuda1-390 nvidia-settings\
     # && \
+# ==================================================================
+# Install BAZEL & Install and Build Tensorflow
+# ------------------------------------------------------------------
+    # mkdir /bazel && \
+    # cd /bazel && \
+    # curl -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36" -fSsL -O https://github.com/bazelbuild/bazel/releases/download/$BAZEL_VERSION/bazel-$BAZEL_VERSION-installer-linux-x86_64.sh && \
+    # curl -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36" -fSsL -o /bazel/LICENSE.txt https://raw.githubusercontent.com/bazelbuild/bazel/master/LICENSE && \
+    # chmod +x bazel-*.sh && \
+    # ./bazel-$BAZEL_VERSION-installer-linux-x86_64.sh && \
+    # cd / && \
+    # rm -f /bazel/bazel-$BAZEL_VERSION-installer-linux-x86_64.sh
+
+    # $git clone https://github.com/tensorflow/tensorflow.git --branch r1.12 --depth 1 && \
+    # cd tensorflow && \
+    
 # ==================================================================
 # Install (pip) tensorflow keras pytorch
 # ------------------------------------------------------------------
@@ -212,8 +251,8 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     tar zxf openmpi-3.0.0.tar.gz && \
     cd openmpi-3.0.0 && \
     ./configure --enable-orterun-prefix-by-default && \
-    make -j $(nproc) all && \
-    make install && \
+    make -j $(nproc) all --silent && \
+    make install --silent && \
     ldconfig && \
     cd ~ &&\
     rm -rf /tmp/openmpi \ 
