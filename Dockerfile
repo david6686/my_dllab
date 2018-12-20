@@ -143,14 +143,16 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 # miniconda3
 # ------------------------------------------------------------------ 
     #install miniconda3
-    wget --quiet https://repo.continuum.io/miniconda/Miniconda3-4.4.10-Linux-x86_64.sh -O ~/miniconda.sh && \
+    wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
     /bin/bash ~/miniconda.sh -b -p /opt/conda && \
     rm ~/miniconda.sh && \
     /opt/conda/bin/conda clean -tipsy && \
     ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     echo "conda activate base" >> ~/.bashrc \
-    && \
+    #clean
+    conda clean --dry-run --tarballs &&\
+    conda clean --y --tarballs &&\
 # ==================================================================
 # 設定顯示卡(for rancher)  (removed)
 # -----------------------------------------------------------------
@@ -184,20 +186,20 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 # Install (pip) tensorflow keras pytorch
 # ------------------------------------------------------------------
     $PIP_INSTALL \
-    tensorflow-gpu==$TENSORFLOW_VERSION \
-    keras \
+    # tensorflow-gpu==$TENSORFLOW_VERSION \
+    # keras \
     h5py \
     xmltodict \
     glances \
     nvidia-ml-py3 \
-    jupyter \
+    # jupyter \
     thefuck \
     psrecord \
-    http://download.pytorch.org/whl/cu90/torch-0.4.0-cp36-cp36m-linux_x86_64.whl  \
-    torchvision \
+    # http://download.pytorch.org/whl/cu90/torch-0.4.0-cp36-cp36m-linux_x86_64.whl  \
+    # torchvision \
     imgaug \
     onnx \
-    cntk-gpu \
+    # cntk-gpu \
 #     tensorflowjs \
     && \
 # ================================================================== 
@@ -216,7 +218,11 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 # ------------------------------------------------------------------
     conda config --add channels intel \
     && \
+    #clean
+    conda clean --dry-run --tarballs &&\
+    conda clean --y --tarballs &&\
     DEBIAN_FRONTEND=noninteractive $CONDA  \
+    tensorflow-gpu=$TENSORFLOW_VERSION \
     opencv \
     gensim \
     tqdm \
@@ -229,10 +235,14 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     scipy \
     theano \
     protobuf \
-    libprotobuf=3.2.0 \
+    # libprotobuf=3.2.0 \
     && \
-    conda install -c conda-forge jupyterlab \
+    conda install pytorch torchvision -c pytorch \
+    # conda install -c conda-forge jupyterlab \
     && \
+    #clean
+    conda clean --dry-run --tarballs &&\
+    conda clean --y --tarballs &&\
 # ==================================================================
 # boost
 # ------------------------------------------------------------------
