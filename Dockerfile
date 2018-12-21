@@ -4,7 +4,7 @@ MAINTAINER Silentink (https://github.com/david6686/my_dllab)
 # ==================================================================
 # module list
 # ------------------------------------------------------------------
-# python            3.7   (conda)
+# python            3.6.5   (conda)
 # jupyter           latest (pip)
 # pytorch           latest  (pip)
 # tensorflow        1.12.0 (pip)
@@ -191,7 +191,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 # ------------------------------------------------------------------
     $PIP_INSTALL \
     # 不可以用conda 因為conda 會cpu gpu 版都裝導致在用時找不到gpu
-    tensorflow-gpu=$TENSORFLOW_VERSION \ 
+    tensorflow-gpu==$TENSORFLOW_VERSION \ 
     h5py \
     xmltodict \
     glances \
