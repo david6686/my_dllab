@@ -190,6 +190,8 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 # Install (pip) tensorflow keras pytorch
 # ------------------------------------------------------------------
     $PIP_INSTALL \
+    # 不可以用conda 因為conda 會cpu gpu 版都裝導致在用時找不到gpu
+    tensorflow-gpu=$TENSORFLOW_VERSION \ 
     h5py \
     xmltodict \
     glances \
@@ -224,9 +226,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     conda clean --y --tarballs \
     && \
     DEBIAN_FRONTEND=noninteractive $CONDA  \
-    tensorflow-gpu=$TENSORFLOW_VERSION \
     opencv \
-    keras \
     gensim \
     tqdm \
     dask \
@@ -240,7 +240,8 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     protobuf \
     # libprotobuf=3.2.0 \
     && \
-    conda install pytorch torchvision -c pytorch \
+    conda install pytorch torchvision -c pytorch &&\
+    conda install keras --no-deps \
     # conda install -c conda-forge jupyterlab \
     && \
     conda clean --dry-run --tarballs &&\
@@ -267,6 +268,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     make -j $(nproc) all && \
     make install && \
     #clean
+    echo makeclean &&\
     make clean &&\
     #clean-end 
     ldconfig && \
@@ -299,6 +301,10 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     echo NCCL_SOCKET_IFNAME=^docker0 >> /etc/nccl.conf \
     && \
 # Install OpenSSH for MPI to communicate between containers
+    #clean
+    conda clean --dry-run --tarballs &&\
+    conda clean --y --tarballs \
+    && \
     DEBIAN_FRONTEND=noninteractive  $APT_INSTALL \ 
     openssh-client \
     openssh-server && \
