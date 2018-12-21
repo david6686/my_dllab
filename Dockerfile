@@ -4,7 +4,7 @@ MAINTAINER Silentink (https://github.com/david6686/my_dllab)
 # ==================================================================
 # module list
 # ------------------------------------------------------------------
-# python            3.6    (conda)
+# python            3.7   (conda)
 # jupyter           latest (pip)
 # pytorch           latest  (pip)
 # tensorflow        1.12.0 (pip)
@@ -74,47 +74,49 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         # cuda-cusolver-dev-10-0 \
         # cuda-cusparse-dev-10-0 \
         #other
-        pkg-config \
+        autojump \
         bash\
-        cpulimit \    
-        sudo \
-        wget \
-        nmon \
-        software-properties-common \
-        ca-certificates \
-        curl \
-        dbus-x11 \
-        fontconfig \
-        git \
-        rlwrap \
-        silversearcher-ag \
-        figlet \
-        fish \
-        cmake \
-        screen \
-        nano \
-        pv \
-        vim \
-        libjpeg-dev\
-        libgl1-mesa-glx \
-        libpng-dev \
         build-essential \
         bzip2 \
-        unzip \
-        zip \
-        gzip \
-        unrar \ 
-        rar \
-        tar \
-        autojump \
+        ca-certificates \
+        cmake \
+        cpulimit \    
+        curl \
+        dbus-x11 \
         doxygen \
+        emacs26 \
+        figlet \
         firefox \
+        fish \
+        fontconfig \
+        git \
+        gzip \
         htop \
-        tmux \
-        emacs25 \
-        protobuf-compiler \
+        libgl1-mesa-glx \
+        libjpeg-dev\
+        libpng-dev \
         libprotoc-dev \
+        nano \
+        nmon \
+        pkg-config \
+        protobuf-compiler \
+        pv \
+        rar \
+        rlwrap \
+        screen \
+        silversearcher-ag \
+        software-properties-common \
+        sudo \
+        tar \
+        tmux \
+        unrar \ 
+        unzip \
+        vim \
+        wget \
+        zip \
         && \
+        #clean
+        apt-get clean && \
     #Bazel
     echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list &&\
     curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add - && \
@@ -152,7 +154,8 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     echo "conda activate base" >> ~/.bashrc \
     #clean
     conda clean --dry-run --tarballs &&\
-    conda clean --y --tarballs &&\
+    conda clean --y --tarballs \
+    && \
 # ==================================================================
 # 設定顯示卡(for rancher)  (removed)
 # -----------------------------------------------------------------
@@ -161,12 +164,13 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     #     libnccl2=${NCCL_VERSION} \
     #     libnccl-dev=${NCCL_VERSION} \
     #     && \
-#     add-apt-repository -y ppa:graphics-drivers/ppa \
-#     && \
-#     apt-get update &&\
-    # DEBIAN_FRONTEND=noninteractive  $APT_INSTALL \
+    add-apt-repository -y ppa:graphics-drivers/ppa \
+    && \
+    apt-get update &&\
+    DEBIAN_FRONTEND=noninteractive  $APT_INSTALL \
+    nvidia-driver-410 nvidia-settings\
     # nvidia-390 nvidia-390-dev libcuda1-390 nvidia-settings\
-    # && \
+    && \
 # ==================================================================
 # Install BAZEL & Install and Build Tensorflow
 # ------------------------------------------------------------------
@@ -186,8 +190,6 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 # Install (pip) tensorflow keras pytorch
 # ------------------------------------------------------------------
     $PIP_INSTALL \
-    # tensorflow-gpu==$TENSORFLOW_VERSION \
-    # keras \
     h5py \
     xmltodict \
     glances \
@@ -218,12 +220,13 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 # ------------------------------------------------------------------
     conda config --add channels intel \
     && \
-    #clean
     conda clean --dry-run --tarballs &&\
-    conda clean --y --tarballs &&\
+    conda clean --y --tarballs \
+    && \
     DEBIAN_FRONTEND=noninteractive $CONDA  \
     tensorflow-gpu=$TENSORFLOW_VERSION \
     opencv \
+    keras \
     gensim \
     tqdm \
     dask \
@@ -240,9 +243,9 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     conda install pytorch torchvision -c pytorch \
     # conda install -c conda-forge jupyterlab \
     && \
-    #clean
     conda clean --dry-run --tarballs &&\
-    conda clean --y --tarballs &&\
+    conda clean --y --tarballs \
+    &&\
 # ==================================================================
 # boost
 # ------------------------------------------------------------------
@@ -253,16 +256,19 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     # ./bootstrap.sh --with-python=python3.6 && \
     # ./b2 install --prefix=/usr/local && \
 # ==================================================================
-# Install Open MPI
+# Install Open MPI   # horovod dockerfile
 # ------------------------------------------------------------------
     mkdir /tmp/openmpi && \
     cd /tmp/openmpi && \
-    wget https://www.open-mpi.org/software/ompi/v3.0/downloads/openmpi-3.0.0.tar.gz && \
-    tar zxf openmpi-3.0.0.tar.gz && \
-    cd openmpi-3.0.0 && \
+    wget https://www.open-mpi.org/software/ompi/v3.1/downloads/openmpi-3.1.2.tar.gz && \
+    tar zxf openmpi-3.1.2.tar.gz && \
+    cd openmpi-3.1.2 && \
     ./configure --enable-orterun-prefix-by-default && \
-    make -j $(nproc) all --silent && \
-    make install --silent && \
+    make -j $(nproc) all && \
+    make install && \
+    #clean
+    make clean &&\
+    #clean-end 
     ldconfig && \
     cd ~ &&\
     rm -rf /tmp/openmpi \ 
@@ -270,7 +276,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 # ==================================================================
 # Install Horovod, temporarily using CUDA stubs
 # ------------------------------------------------------------------
-    ldconfig /usr/local/cuda-9.0/targets/x86_64-linux/lib/stubs && \
+    ldconfig /usr/local/cuda-10.0/targets/x86_64-linux/lib/stubs && \
     HOROVOD_GPU_ALLREDUCE=NCCL pip install --no-cache-dir horovod && \
     ldconfig \
     && \
@@ -288,6 +294,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     echo "rmaps_base_mapping_policy = slot" >> /usr/local/etc/openmpi-mca-params.conf && \
     echo "btl_tcp_if_exclude = lo,docker0" >> /usr/local/etc/openmpi-mca-params.conf \
     && \
+    # Set default NCCL parameters
     echo NCCL_DEBUG=INFO >> /etc/nccl.conf && \
     echo NCCL_SOCKET_IFNAME=^docker0 >> /etc/nccl.conf \
     && \
