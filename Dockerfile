@@ -151,7 +151,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     /opt/conda/bin/conda clean -tipsy && \
     ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
-    echo "conda activate base" >> ~/.bashrc \
+    echo "conda activate base" >> ~/.bashrc &&\
     #clean
     conda clean --dry-run --tarballs &&\
     conda clean --y --tarballs \
