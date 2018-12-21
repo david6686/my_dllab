@@ -189,6 +189,11 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 # ==================================================================
 # Install (pip) tensorflow keras pytorch
 # ------------------------------------------------------------------
+    conda config --add channels intel \
+    conda install python==3.6.5 \
+    && \
+
+
     $PIP_INSTALL \
     # 不可以用conda 因為conda 會cpu gpu 版都裝導致在用時找不到gpu
     tensorflow-gpu==$TENSORFLOW_VERSION \ 
@@ -220,8 +225,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 # ==================================================================
 # Install (conda) theano sklearn scipy numpy ... ML package
 # ------------------------------------------------------------------
-    conda config --add channels intel \
-    && \
+    
     conda clean --dry-run --tarballs &&\
     conda clean --y --tarballs \
     && \
