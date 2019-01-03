@@ -189,7 +189,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 # ==================================================================
 # Install (pip) tensorflow keras pytorch
 # ------------------------------------------------------------------
-    conda config --add channels intel \
+    conda config --add channels intel &&\
     conda install python==3.6.5 \
     && \
 
