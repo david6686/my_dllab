@@ -144,14 +144,16 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 # ==================================================================
 # miniconda3
 # ------------------------------------------------------------------ 
-    wget --quiet https://repo.continuum.io/archive/Anaconda3-5.2.0-Linux-x86_64.sh -O ~/anaconda.sh && \
-    # wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
+    #wget --quiet https://repo.continuum.io/archive/Anaconda3-5.2.0-Linux-x86_64.sh -O ~/anaconda.sh && \ 
+    #anaconda 似乎會找不到套件...
+    wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
     /bin/bash ~/anaconda.sh -b -p /opt/conda && \
     rm ~/anaconda.sh && \
     /opt/conda/bin/conda clean -tipsy && \
     ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
-    echo "conda activate base" >> ~/.bashrc &&\
+    conda create -n py36 anaconda python=3.6.5 &&\
+    echo "conda activate py36" >> ~/.bashrc &&\
     #clean
     conda clean --dry-run --tarballs &&\
     conda clean --y --tarballs \
@@ -190,8 +192,8 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 # Install (pip) tensorflow keras pytorch
 # ------------------------------------------------------------------
     conda config --add channels intel &&\
-    conda install python==3.6.5 \
-    && \
+    # conda install python==3.6.5 \
+    # && \
 
 
     $PIP_INSTALL \
