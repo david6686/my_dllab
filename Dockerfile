@@ -154,10 +154,12 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     conda create -n py36 anaconda python=3.6.5 &&\
     echo "conda activate py36" >> ~/.bashrc &&\
+    # 啟動環境
+    conda activate py36 &&\
     #clean
-    conda clean --dry-run --tarballs &&\
-    conda clean --y --tarballs \
-    && \
+    # conda clean --dry-run --tarballs &&\
+    # conda clean --y --tarballs \
+    # && \
 # ==================================================================
 # 設定顯示卡(for rancher)  (removed)
 # -----------------------------------------------------------------
