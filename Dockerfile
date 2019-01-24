@@ -153,7 +153,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     conda create -n py36 anaconda python=3.6.5 &&\
-    echo "conda activate py36" >> ~/.bashrc &&\
+    echo ". /opt/conda/etc/profile.d/conda.sh activate py36" >> ~/.bashrc &&\
     # 啟動環境
     conda activate py36 &&\
     #clean
