@@ -143,9 +143,12 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     xmltodict \
     glances \
     nvidia-ml-py3 \
-    # jupyter \
-    thefuck \
-    psrecord \
+    scikit-learn \
+    matplotlib \
+    Cython \
+    scipy \
+    protobuf \
+    keras \
     # http://download.pytorch.org/whl/cu90/torch-0.4.0-cp36-cp36m-linux_x86_64.whl  \
     # torchvision \
     imgaug \
@@ -171,7 +174,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     ./bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg && \
     pip install /tmp/tensorflow_pkg/tensorflow-1.12.0-tags.whl &&\
     cd ~ &&\
-    rm -rf tensorflow &&\
+    rm -rf tensorflow 
 #########################################################################################分
 #########################################################################################隔
 #########################################################################################線
