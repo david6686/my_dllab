@@ -118,7 +118,60 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     && wget -q "${NNG_URL}" -P /usr/local/share/fonts \
     && fc-cache -fv \
     && \
+# ==================================================================
+# 設定顯示卡(for rancher)  (removed)
+# -----------------------------------------------------------------
+    # apt-get update && apt-get install -y --no-install-recommends --allow-downgrades\
+    #     libcudnn7=${CUDNN_VERSION} \
+    #     libnccl2=${NCCL_VERSION} \
+    #     libnccl-dev=${NCCL_VERSION} \
+    #     && \
+    add-apt-repository -y ppa:graphics-drivers/ppa \
+    && \
+    apt-get update &&\
+    DEBIAN_FRONTEND=noninteractive  $APT_INSTALL \
+    nvidia-driver-410 nvidia-settings\
+    # nvidia-390 nvidia-390-dev libcuda1-390 nvidia-settings\
+    && \
+# ==================================================================
+# Install (pip) tensorflow keras pytorch
+# ------------------------------------------------------------------
+    $PIP_INSTALL \
+    # 不可以用conda 因為conda 會cpu gpu 版都裝導致在用時找不到gpu
+    # tensorflow-gpu==$TENSORFLOW_VERSION \ 
+    h5py \
+    xmltodict \
+    glances \
+    nvidia-ml-py3 \
+    # jupyter \
+    thefuck \
+    psrecord \
+    # http://download.pytorch.org/whl/cu90/torch-0.4.0-cp36-cp36m-linux_x86_64.whl  \
+    # torchvision \
+    imgaug \
+    onnx \
+    # cntk-gpu \
+#     tensorflowjs \
+    && \
+# ==================================================================
+# Install BAZEL & Install and Build Tensorflow
+# ------------------------------------------------------------------
+    mkdir /bazel && \
+    wget -O /bazel/installer.sh "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-installer-linux-x86_64.sh" && \
+    wget -O /bazel/LICENSE.txt "https://raw.githubusercontent.com/bazelbuild/bazel/master/LICENSE" && \
+    chmod +x /bazel/installer.sh && \
+    /bazel/installer.sh && \
+    rm -f /bazel/installer.sh && \
 
+    git clone https://github.com/tensorflow/tensorflow.git --branch r1.12 --depth 1 && \
+    cd tensorflow && \
+    ls && \ 
+    ./configure < /TF_CONFIG.txt && \
+    bazel build --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package && \
+    ./bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg && \
+    pip install /tmp/tensorflow_pkg/tensorflow-1.12.0-tags.whl &&\
+    cd ~ &&\
+    rm -rf tensorflow &&\
 #########################################################################################分
 #########################################################################################隔
 #########################################################################################線
@@ -156,8 +209,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # see https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/KEYS
 # see also "update.sh" (https://github.com/docker-library/tomcat/blob/master/update.sh)
-# ENV GPG_KEYS 05AB33110949707C93A279E3D3EFE6B686867BA6 07E48665A34DCAFAE522E5E6266191C37C037D42 47309207D818FFD8DCD3F83F1931D684307A10A5 541FBE7D8F78B25E055DDEE13C370389288584E7 61B832AC2F1C5A90F0F9B00A1C506407564C17A3 713DA88BE50911535FE716F5208B0AB1D63011C7 79F7026C690BAA50B92CD8B66A3AD3F4F22C4FED 9BA44C2621385CB966EBA586F72C284D731FABEE A27677289986DB50844682F8ACB77FC2E86E29AC A9C5DF4D22E99998D9875A5110C01C5A2F6059E7 DCFD35E0BF8CA7344752DE8B6FB21E8933C60243 F3A04C595DB5B6A5F1ECA43E3B7BBB100D811BBE F7DA48BB64BCB84ECBA7EE6935CD23C10D498E23
 ENV GPG_KEYS 05AB33110949707C93A279E3D3EFE6B686867BA6 07E48665A34DCAFAE522E5E6266191C37C037D42 47309207D818FFD8DCD3F83F1931D684307A10A5 541FBE7D8F78B25E055DDEE13C370389288584E7 61B832AC2F1C5A90F0F9B00A1C506407564C17A3 713DA88BE50911535FE716F5208B0AB1D63011C7 79F7026C690BAA50B92CD8B66A3AD3F4F22C4FED 9BA44C2621385CB966EBA586F72C284D731FABEE A27677289986DB50844682F8ACB77FC2E86E29AC A9C5DF4D22E99998D9875A5110C01C5A2F6059E7 DCFD35E0BF8CA7344752DE8B6FB21E8933C60243 F3A04C595DB5B6A5F1ECA43E3B7BBB100D811BBE F7DA48BB64BCB84ECBA7EE6935CD23C10D498E23
+# ENV GPG_KEYS 05AB33110949707C93A279E3D3EFE6B686867BA607E48665A34DCAFAE522E5E6266191C37C037D4247309207D818FFD8DCD3F83F1931D684307A10A5541FBE7D8F78B25E055DDEE13C370389288584E761B832AC2F1C5A90F0F9B00A1C506407564C17A3713DA88BE50911535FE716F5208B0AB1D63011C779F7026C690BAA50B92CD8B66A3AD3F4F22C4FED9BA44C2621385CB966EBA586F72C284D731FABEEA27677289986DB50844682F8ACB77FC2E86E29ACA9C5DF4D22E99998D9875A5110C01C5A2F6059E7DCFD35E0BF8CA7344752DE8B6FB21E8933C60243F3A04C595DB5B6A5F1ECA43E3B7BBB100D811BBEF7DA48BB64BCB84ECBA7EE6935CD23C10D498E23
 
 ENV TOMCAT_MAJOR 8
 ENV TOMCAT_VERSION 8.5.38
