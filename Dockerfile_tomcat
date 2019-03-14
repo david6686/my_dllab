@@ -107,7 +107,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         openjdk-8-jre \
         python3.6 \
         python3-pip \
-
+        && \
         #clean
         apt-get clean && \
 # ==================================================================
