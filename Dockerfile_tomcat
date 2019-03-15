@@ -61,6 +61,8 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     # add-apt-repository ppa:kelleyk/emacs &&\
     apt-get update \
     && \
+    # mkdir /docker-java-home && \
+    # mkdir /docker-java-home/jre && \
     
 # ==================================================================
 # apt-get
@@ -84,6 +86,10 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         bzip2 \
         ca-certificates \
         cmake \
+        netbase \
+        curl \
+        gnupg \
+        dirmngr \
         fontconfig \
         git \
         gzip \
@@ -144,7 +150,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     scipy \
     protobuf \
     tensorflow-gpu \
-    openc-python \
+    # openc-python \
     keras \
     # http://download.pytorch.org/whl/cu90/torch-0.4.0-cp36-cp36m-linux_x86_64.whl  \
     # torchvision \
@@ -173,7 +179,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     && \
     apt-get update &&\
     DEBIAN_FRONTEND=noninteractive  $APT_INSTALL \
-    nvidia-driver-410 nvidia-settings\
+    nvidia-driver-410 nvidia-settings
     # nvidia-390 nvidia-390-dev libcuda1-390 nvidia-settings\
     # && \
 
@@ -208,7 +214,6 @@ RUN { \
         echo 'dirname "$(dirname "$(readlink -f "$(which javac || which java)")")"'; \
     } > /usr/local/bin/docker-java-home \
     && chmod +x /usr/local/bin/docker-java-home
-
 # do some fancy footwork to create a JAVA_HOME that's cross-architecture-safe
 RUN ln -svT "/usr/lib/jvm/java-8-openjdk-$(dpkg --print-architecture)" /docker-java-home
 
