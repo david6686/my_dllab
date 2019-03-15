@@ -45,7 +45,7 @@ ENV OPENSSL_VERSION 1.1.0f-3+deb9u2
 RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list &&\
     #commend set
     APT_INSTALL="apt-get install -y --no-install-recommends" && \
-    PIP_INSTALL="pip install  --no-cache-dir" && \
+    PIP_INSTALL="pip3 install  --no-cache-dir" && \
     GIT_CLONE="git clone --depth 1" && \
     CONDA="conda install -y" && \
     rm -rf  /var/lib/apt/lists/* \
@@ -53,10 +53,12 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
             /etc/apt/sources.list.d/nvidia-ml.list && \
     apt-get update  --fix-missing && \
     DEBIAN_FRONTEND=noninteractive  $APT_INSTALL software-properties-common && \
-    add-apt-repository -y ppa:graphics-drivers/ppa && \    
-    add-apt-repository ppa:kelleyk/emacs &&\
+    add-apt-repository -y ppa:graphics-drivers/ppa && \   
+    add-apt-repository ppa:deadsnakes/ppa && \ 
+    # add-apt-repository ppa:kelleyk/emacs &&\
     apt-get update \
     && \
+    
 # ==================================================================
 # apt-get
 # ------------------------------------------------------------------
@@ -106,10 +108,44 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         openjdk-8-jdk \
         openjdk-8-jre \
         python3.6 \
+        python3.6-dev \
+        python3-distutils-extra \
         python3-pip \
+        # python3-setuptools\
         && \
         #clean
         apt-get clean && \
+        wget -O ~/get-pip.py \
+            https://bootstrap.pypa.io/get-pip.py && \
+        python3.6 ~/get-pip.py && \
+        ln -s /usr/bin/python3.6 /usr/local/bin/python3 && \
+        ln -s /usr/bin/python3.6 /usr/local/bin/python && \
+# ==================================================================
+# Install (pip) tensorflow keras pytorch
+# ------------------------------------------------------------------
+    $PIP_INSTALL \
+    # 不可以用conda 因為conda 會cpu gpu 版都裝導致在用時找不到gpu
+    # tensorflow-gpu==$TENSORFLOW_VERSION \ 
+    setuptools \
+    h5py \
+    xmltodict \
+    glances \
+    nvidia-ml-py3 \
+    scikit-learn \
+    matplotlib \
+    Cython \
+    scipy \
+    protobuf \
+    tensorflow-gpu \
+    openc-python \
+    keras \
+    # http://download.pytorch.org/whl/cu90/torch-0.4.0-cp36-cp36m-linux_x86_64.whl  \
+    # torchvision \
+    imgaug \
+    onnx \
+    # cntk-gpu \
+#     tensorflowjs \
+    && \
 # ==================================================================
 # set font
 # ------------------------------------------------------------------
@@ -132,49 +168,27 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     DEBIAN_FRONTEND=noninteractive  $APT_INSTALL \
     nvidia-driver-410 nvidia-settings\
     # nvidia-390 nvidia-390-dev libcuda1-390 nvidia-settings\
-    && \
-# ==================================================================
-# Install (pip) tensorflow keras pytorch
-# ------------------------------------------------------------------
-    $PIP_INSTALL \
-    # 不可以用conda 因為conda 會cpu gpu 版都裝導致在用時找不到gpu
-    # tensorflow-gpu==$TENSORFLOW_VERSION \ 
-    h5py \
-    xmltodict \
-    glances \
-    nvidia-ml-py3 \
-    scikit-learn \
-    matplotlib \
-    Cython \
-    scipy \
-    protobuf \
-    keras \
-    # http://download.pytorch.org/whl/cu90/torch-0.4.0-cp36-cp36m-linux_x86_64.whl  \
-    # torchvision \
-    imgaug \
-    onnx \
-    # cntk-gpu \
-#     tensorflowjs \
-    && \
+    # && \
+
 # ==================================================================
 # Install BAZEL & Install and Build Tensorflow
 # ------------------------------------------------------------------
-    mkdir /bazel && \
-    wget -O /bazel/installer.sh "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-installer-linux-x86_64.sh" && \
-    wget -O /bazel/LICENSE.txt "https://raw.githubusercontent.com/bazelbuild/bazel/master/LICENSE" && \
-    chmod +x /bazel/installer.sh && \
-    /bazel/installer.sh && \
-    rm -f /bazel/installer.sh && \
+    # mkdir /bazel && \
+    # wget -O /bazel/installer.sh "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-installer-linux-x86_64.sh" && \
+    # wget -O /bazel/LICENSE.txt "https://raw.githubusercontent.com/bazelbuild/bazel/master/LICENSE" && \
+    # chmod +x /bazel/installer.sh && \
+    # /bazel/installer.sh && \
+    # rm -f /bazel/installer.sh && \
 
-    git clone https://github.com/tensorflow/tensorflow.git --branch r1.12 --depth 1 && \
-    cd tensorflow && \
-    ls && \ 
-    ./configure < /TF_CONFIG.txt && \
-    bazel build --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package && \
-    ./bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg && \
-    pip install /tmp/tensorflow_pkg/tensorflow-1.12.0-tags.whl &&\
-    cd ~ &&\
-    rm -rf tensorflow 
+    # git clone https://github.com/tensorflow/tensorflow.git --branch r1.12 --depth 1 && \
+    # cd tensorflow && \
+    # ls && \ 
+    # ./configure < /TF_CONFIG.txt && \
+    # bazel build --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package && \
+    # ./bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg && \
+    # pip install /tmp/tensorflow_pkg/*.whl &&\
+    # cd ~ &&\
+    # rm -rf tensorflow 
 #########################################################################################分
 #########################################################################################隔
 #########################################################################################線
