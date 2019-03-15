@@ -11,10 +11,11 @@ ENV SHELL /usr/bin/fish
 ENV PATH /opt/conda/envs/dllab/bin:$PATH
 ENV CONDA_DEFAULT_ENV dllab
 ENV CONDA_PREFIX /opt/conda/envs/dllab
+ENV JAVA_HOME /docker-java-home/jre
 # ENV UHOME="/home/emacs"
 ENV BAZEL_VERSION 0.18.0
 ENV JAVA_VERSION 8u191
-ENV JAVA_DEBIAN_VERSION 8u191-b12-2ubuntu0.16.04.1
+ENV JAVA_DEBIAN_VERSION 8u191-b12-2ubuntu0.18.04.1
 # Default fonts
 ENV NNG_URL="https://github.com/google/fonts/raw/master/ofl/\
 nanumgothic/NanumGothic-Regular.ttf" \
@@ -99,6 +100,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         protobuf-compiler \
         rar \
         tmux \
+        xz-utils \
         tar \
         sudo \
         unrar \ 
@@ -113,6 +115,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         python3.6-dev \
         python3-distutils-extra \
         python3-pip \
+        python3-opencv \
         # python3-setuptools\
         && \
         #clean
@@ -122,6 +125,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
         python3.6 ~/get-pip.py && \
         ln -s /usr/bin/python3.6 /usr/local/bin/python3 && \
         ln -s /usr/bin/python3.6 /usr/local/bin/python && \
+    java -version &&\
 # ==================================================================
 # Install (pip) tensorflow keras pytorch
 # ------------------------------------------------------------------
@@ -129,7 +133,7 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
     # 不可以用conda 因為conda 會cpu gpu 版都裝導致在用時找不到gpu
     # tensorflow-gpu==$TENSORFLOW_VERSION \ 
     setuptools \
-    pip install --upgrade pip \
+    # pip install --upgrade pip \
     h5py \
     xmltodict \
     glances \
@@ -195,6 +199,18 @@ RUN echo "deb http://developer.download.nvidia.com/compute/machine-learning/repo
 #########################################################################################分
 #########################################################################################隔
 #########################################################################################線
+# add a simple script that can auto-detect the appropriate JAVA_HOME value
+# based on whether the JDK or only the JRE is installed
+RUN { \
+        echo '#!/bin/sh'; \
+        echo 'set -e'; \
+        echo; \
+        echo 'dirname "$(dirname "$(readlink -f "$(which javac || which java)")")"'; \
+    } > /usr/local/bin/docker-java-home \
+    && chmod +x /usr/local/bin/docker-java-home
+
+# do some fancy footwork to create a JAVA_HOME that's cross-architecture-safe
+RUN ln -svT "/usr/lib/jvm/java-8-openjdk-$(dpkg --print-architecture)" /docker-java-home
 
 RUN set -ex; \
     currentVersion="$(dpkg-query --show --showformat '${Version}\n' openssl)"; \
